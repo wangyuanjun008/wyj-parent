@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.wyj.dao.data.DataGroupDao">
+	<select id="getDataGroupById" parameterType="java.lang.Long" resultType="com.wyj.entity.data.DataGroup">
+		SELECT * FROM B_BP_DATAGROUP WHERE
+		groupId=#{groupId}
+	</select>
+	<insert id="saveDataGroup" parameterType="com.wyj.entity.data.DataGroup">
+		INSERT INTO B_BP_DATAGROUP(groupCode,groupName,remark,status) 
+		VALUES (#{groupCode},#{groupName},#{remark},#{status})
+	</insert>
+	<delete id="removeDataGroupById" parameterType="java.lang.Long">
+		DELETE FROM B_BP_DATAGROUP WHERE
+		groupId=#{groupId}
+	</delete>
+
+	<update id="updateDataGroup" parameterType="com.wyj.entity.data.DataGroup">
+		UPDATE B_BP_DATAGROUP
+		SET groupCode = #{groupCode},groupName=#{groupName},remark=#{remark},status=#{status} WHERE groupId=#{groupId}
+	</update>
+	<select id="listDataGroup" resultMap="dataGroupList">
+		SELECT * FROM B_BP_DATAGROUP
+	</select>
+	<resultMap type="com.wyj.entity.data.DataGroup" id="dataGroupList">
+		<result property="groupId" column="groupId" />
+		<result property="groupCode" column="groupCode" />
+		<result property="groupName" column="groupName" />
+		<result property="remark" column="remark" />
+		<result property="status" column="status" />
+	</resultMap>
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.wyj.dao.auth.UserDao">
+	<select id="getUserById" parameterType="java.lang.Long" resultType="com.wyj.entity.auth.User">
+		SELECT * FROM USER WHERE
+		userId=#{userId}
+	</select>
+	<insert id="saveUser" parameterType="com.wyj.entity.auth.User">
+		INSERT INTO USER(userName,password,name,sex,age,phone,email,address)
+		VALUES (#{userName},#{password},#{name},#{sex},#{age},#{phone},#{email},#{address})
+	</insert>
+	<delete id="removeUserById" parameterType="java.lang.Long">
+		DELETE FROM USER WHERE
+		userId=#{userId}
+	</delete>
+
+	<update id="updateUser" parameterType="com.wyj.entity.auth.User">
+		UPDATE USER SET
+		userName=#{userName},password=#{password},name=#{name},sex=#{sex},age=#{age},phone=#{phone},email=#{email},address=#{address}
+	</update>
+	<select id="listUser" resultMap="userList">
+		SELECT * FROM USER
+	</select>
+	<resultMap type="com.wyj.entity.auth.User" id="userList">
+		<result property="userId" column="userId" />
+		<result property="userName" column="userName" />
+		<result property="password" column="password" />
+		<result property="name" column="name" />
+		<result property="sex" column="sex" />
+		<result property="age" column="age" />
+		<result property="phone" column="phone" />
+		<result property="email" column="email" />
+		<result property="address" column="address" />
+	</resultMap>
+</mapper>

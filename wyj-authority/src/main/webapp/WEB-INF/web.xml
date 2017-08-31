@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	version="3.1">
+	<display-name>StudyProject</display-name>
+	<!-- ==================================================================全局范围内环境参数初始化==================================================================== -->
+	<!-- 指定Spring Bean的配置文件所在目录。默认配置在WEB-INF目录下 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/classes/applicationContext.xml
+<!-- classpath*:/applicationContext.xml -->
+			classpath:spring-mybatis.xml
+		</param-value>
+
+	</context-param>
+
+	<!--设置loglock的配置文件位置 -->
+	<context-param>
+		<param-name>logbackConfigLocation</param-name>
+		<param-value>/WEB-INF/classes/logback.xml</param-value>
+	</context-param>
+
+	<!-- ==================================================================过滤器配置  ==================================================================== -->
+	<!--中文处理过滤，如果不设计中文的处理下面这部分可以移除 -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- ==================================================================监听器配置==================================================================== -->
+	<!--3. 注册配置文件读取器，监听spring配置文件的变化 详见 注3 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!--使用监听加载loglock的配置文件 -->
+	<listener>
+		<listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>
+	</listener>
+
+
+
+
+	<!-- ==================================================================servlet配置==================================================================== -->
+	<!-- class DispatcherServlet会自动扫描classpath下面的名字为<servlet-name>-servlet.xml的配置文件，在这里，因为我servlet-name配置 
+		的是springmvc，所以扫描到的就是springmvc-servlet -->
+	<!--1.配置spring分发器(是总的控制中心 被拦截的url会汇聚到该servlet) -->
+	<servlet>
+		<servlet-name>springmvc</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!--配置spring上下文 (从该目录下加载spring mvc的配置文件) -->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:springmvc-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>  <!--tomcat启动后立即加载,当值为正数或零时：Servlet容器先加载数值小的servlet，再依次加载其他数值大的servlet.-->  
+		
+	</servlet>
+
+	<!--配置springmvc拦截.do的请求,类似也可以是 / 表示拦截所有的 -->
+	<servlet-mapping>
+		<servlet-name>springmvc</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+
+</web-app>

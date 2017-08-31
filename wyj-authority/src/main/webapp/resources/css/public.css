@@ -1,0 +1,24 @@
+.btn-primary {
+    background-color: #3c8dbc;
+    border-color: #3c8dbc;
+    color: #FFFFFF;
+}
+
+.red{
+    color:red;
+}
+
+.form-group input.form-control{
+	margin:0 !important;
+}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    background-color: #fff !important;
+    opacity: 1;
+}
+body{
+    font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
+    font-size: 13px;
+    margin:0;
+    padding:0;
+}
