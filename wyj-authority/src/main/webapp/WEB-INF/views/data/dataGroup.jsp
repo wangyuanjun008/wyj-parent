@@ -66,7 +66,7 @@
 						<input type="hidden" name="groupId">
 					</form>
 				</div>
-				<div class="modal-footer">
+				<div class="modal-footer" style="border: none; margin-left: 40%; padding-bottom: 20px;">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
 					<button type="button" class="btn btn-primary" onclick="save(model);">提交</button>
 
@@ -104,16 +104,35 @@
                 dropdownParent : $("#myModal"),
                 allowClear : true,
                 width : 150,
-                data : [ {
-                    id : 1,
-                    text : '是'
-                }, {
-                    id : 0,
-                    text : '否'
-                } ]
+                ajax : {
+                    url : '${ctx}/dataDict/getData?groupCode='+'yesOrNo',
+                    dataType : 'json',
+                    type : 'get',
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term 请求参数
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        /*var itemList = [];//当数据对象不是{id:0,text:'ANTS'}这种形式的时候，可以使用类似此方法创建新的数组对象
+                        var arr = data.result.list
+                        for(item in arr){
+                            itemList.push({id: item, text: arr[item]})
+                        }*/
+                        return {
+                            results: data,//itemList
+                            pagination: {
+                                more: (params.page * 30) < data.total_count
+                            }
+                        };
+                    },
+                    cache: true
+                }
             });
         });
-
+function myEdit(){}
         function doQuery(params) {
             $('#demo-table').bootstrapTable('refresh'); //刷新表格
         }
@@ -121,6 +140,7 @@
             var url = "${ctx}/dataGroup/list";
             $('#demo-table').bootstrapTable({
                 method : 'post',
+                contentType : 'application/x-www-form-urlencoded',
                 url : url,
                 editable : true,//开启编辑模式
                 height : $(window).height() - 110,//定义表格的高度。

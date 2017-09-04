@@ -22,13 +22,14 @@
 </head>
 <body>
 	<div class="col-sm-2">
-		<ul id="treeDemo" class="ztree"></ul>
+		<ul id="treeDemo" class="ztree" url="${ctx}/dataDict/renderTree"></ul>
 	</div>
 	<div class="col-sm-10">
 		<div id="toolbar">
-			<button type="button" class="btn btn-primary" data-toggle="modal" onclick='creat(model);'>新增用户</button>
-			<button type="button" class="btn btn-primary" data-toggle="modal" onclick="edit(model);">编辑用户</button>
-			<button type="button" class="btn btn-primary" onclick="remove(model);">删除用户</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal" onclick='creat(model);'>新增数据字典</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal" onclick="edit(model);">编辑数据字典</button>
+			<button type="button" class="btn btn-primary" onclick="remove(model);">删除数据字典</button>
+			<input id="search_dataGroupId" type="hidden">
 		</div>
 		<div class="container" style="width: 100%">
 			<table id="demo-table">
@@ -48,34 +49,31 @@
 							<div class="form-group">
 								<label class="col-sm-1 control-label"><span class="red">*</span>编码:</label>
 								<div class="col-sm-3">
-									<input type="text" class="form-control" name="userName">
+									<input type="text" class="form-control" name="dictCode">
 								</div>
 								<label class="col-sm-1 control-label"><span class="red">*</span>名称:</label>
 								<div class="col-sm-3">
-									<input type="text" class="form-control" name="password">
+									<input type="text" class="form-control" name="dictName">
 								</div>
-								<label class="col-sm-1 control-label"><span class="red">*</span>分组编码:</label>
+								<label class="col-sm-1 control-label">描述:</label>
 								<div class="col-sm-3">
-									<input type="text" class="form-control" name="name">
+									<input type="text" class="form-control" name="remark">
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-1 control-label">描述:</label>
-								<div class="col-sm-3">
-									<input type="text" class="form-control" name="age">
-								</div>
 								<label class="col-sm-1 control-label">父节点ID:</label>
 								<div class="col-sm-3">
 									<input type="text" class="form-control" name="dictParentId">
 								</div>
-								<label class="col-sm-1 control-label">使用状态:</label> <select id="sel_menu2" class="col-sm-3 form-control select2">
+								<label class="col-sm-1 control-label">使用状态:</label> <select id="sel_status" name="status" class="col-sm-3 form-control select2">
 								</select>
 							</div>
 							<input type="hidden" name="dictId">
+							<input type="hidden" name="dataGroup.groupId">
 						</form>
 					</div>
 				</div>
-				<div class="modal-footer">
+				<div class="modal-footer" style="border: none; margin-left: 40%; padding-bottom: 20px;">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
 					<button type="button" class="btn btn-primary" onclick="save(model);">提交</button>
 				</div>
@@ -102,78 +100,82 @@
             id : "myModal",
             formId : "saveForm",
             entityId : "dictId",
-            createTitle : "新增字典",
-            editTitle : "编辑字典",
+            createTitle : "新增数据字典",
+            editTitle : "编辑数据字典",
             editURL : "${ctx}/dataDict",
             saveURL : "${ctx}/dataDict/add",
             removeURL : "${ctx}/dataDict/remove"
         }
 
-        var setting = {
-            view : {
-                showLine : false
-            }
-        };
+        function setting(url) {
+            var setting = {
+                async : {
+                    enable : true,
+                    type : "get",
+                    //表示异步加载采用 post 方法请求
+                    url : url,
+                    autoParam : [ "id", "type" ]
+                //传递节点的id 和 type值给后台(当异步加载数据时)
+                },
 
-        var zNodes = [ {
-            name : "数据分组",
-            open : true,
-            children : [ {
-                name : "数据分组一",
-                open : true,
-                children : [ {
-                    name : "一",
-                    click : "#table"
-                }, {
-                    name : "二",
-                    click : "#table"
-                }, {
-                    name : "三",
-                    click : "#table"
-                }, {
-                    name : "四",
-                    click : "#table"
-                }, {
-                    name : "五",
-                    click : "#table"
-                }, {
-                    name : "六",
-                    click : "#table"
-                }, ]
-            }, {
-                name : "数据分组二",
-                children : [ {
-                    name : "一",
-                    click : "#table"
-                }, {
-                    name : "二",
-                    click : "#table"
-                }, {
-                    name : "三",
-                    click : "#table"
-                }, {
-                    name : "四",
-                    click : "#table"
-                }, ]
-            } ]
+                callback : {
+                    //                         onAsyncSuccess: zTreeOnAsyncSuccess,
+                    onClick : zTreeOnClick
+                //单击节点事件
+                }
+            };
 
-        } ];
+            return setting;
+        }
 
+        function zTreeOnClick(event, treeId, treeNode, clickFlag) {
+            $('#search_dataGroupId').val(treeNode.id);
+            $('#demo-table').bootstrapTable('refresh'); //刷新表格
+        }
+
+        function myCreate(model){
+            $('#'+model.formId + " input[name='dataGroup.groupId']").val($('#search_dataGroupId').val());
+        }
+        
+        function myEdit(obj,model){
+            $('#'+model.formId + " input[name='dataGroup.groupId']").val(obj.dataGroup.groupId);
+        }
+        
         $(function() {
             initTable();
-            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-            $("#sel_menu2").select2({
+            var treeUrl = $("#treeDemo").attr("url");
+            $.fn.zTree.init($("#treeDemo"), setting(treeUrl));
+            $("#sel_status").select2({
                 placeholder : "--请选择--",
                 dropdownParent : $("#myModal"),
                 allowClear : true,
                 width : 150,
-                data : [ {
-                    id : 1,
-                    text : '是'
-                }, {
-                    id : 0,
-                    text : '否'
-                } ]
+                ajax : {
+                    url : '${ctx}/dataDict/getData?groupCode='+'yesOrNo',
+                    dataType : 'json',
+                    type : 'get',
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term 请求参数
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        /*var itemList = [];//当数据对象不是{id:0,text:'ANTS'}这种形式的时候，可以使用类似此方法创建新的数组对象
+                        var arr = data.result.list
+                        for(item in arr){
+                            itemList.push({id: item, text: arr[item]})
+                        }*/
+                        return {
+                            results: data,//itemList
+                            pagination: {
+                                more: (params.page * 30) < data.total_count
+                            }
+                        };
+                    },
+                    cache: true
+                }
             });
         });
 
@@ -185,6 +187,7 @@
             $('#demo-table').bootstrapTable({
                 //                 url : '${bathPath}/data/data1.json',
                 method : 'post',
+                contentType : 'application/x-www-form-urlencoded',
                 url : url,
                 editable : true,//开启编辑模式
                 height : $(window).height() - 110,//定义表格的高度。
@@ -206,8 +209,8 @@
                 //sidePagination: 'server',
                 //silentSort: false,
                 smartDisplay : false,
-                idField : 'userId',//指定主键列
-                sortName : 'userId',
+                idField : 'dictId',//指定主键列
+                sortName : 'dictId',
                 sortOrder : 'desc',
                 escape : true,
                 maintainSelected : true,//设置为 true 在点击分页按钮或搜索按钮时，将记住checkbox的选择项
@@ -217,45 +220,26 @@
                     field : 'state',
                     checkbox : true
                 }, {
-                    field : 'userName',
-                    title : '账号',
+                    field : 'dictCode',
+                    title : '编码',
                     sortable : true,
                     halign : 'center'
                 }, {
-                    field : 'password',
-                    title : '密码',
+                    field : 'dictName',
+                    title : '名称',
                     sortable : true,
                     halign : 'center'
                 }, {
-                    field : 'name',
-                    title : '姓名',
+                    field : 'remark',
+                    title : '描述',
                     sortable : true,
                     halign : 'center'
                 }, {
-                    field : 'sex',
-                    title : '性别',
+                    field : 'status',
+                    title : '使用状态',
                     sortable : true,
-                    halign : 'center'
-                }, {
-                    field : 'age',
-                    title : '年龄',
-                    sortable : true,
-                    halign : 'center'
-                }, {
-                    field : 'phone',
-                    title : '手机',
-                    sortable : true,
-                    halign : 'center'
-                }, {
-                    field : 'email',
-                    title : '邮箱',
-                    sortable : true,
-                    halign : 'center'
-                }, {
-                    field : 'address',
-                    title : '地址',
-                    sortable : true,
-                    halign : 'center'
+                    halign : 'center',
+                    formatter : genderFormatter
                 } ]
             }).on('all.bs.table', function(e, name, args) {
                 $('[data-toggle="tooltip"]').tooltip();
@@ -271,12 +255,20 @@
             return html.join('');
         }
 
+        /** 替换数据为文字 */
+        function genderFormatter(value) {
+            if (value == null || value == undefined) {
+                return "-";
+            } else if (value == 1) {
+                return "是";
+            } else if (value == 0) {
+                return "否";
+            }
+        }
+        
         function queryParams(params) {
             var param = {
-                //                 orgCode : $("#orgCode").val(),
-                //                 userName : $("#userName").val(),
-                //                 startDate : $("#startDate").val(),
-                //                 endDate : $("#endDate").val(),
+                dataGroupId : $('#search_dataGroupId').val(),
                 limit : this.limit, // 页面大小
                 offset : this.offset, // 页码
                 pageindex : this.pageNumber,
@@ -304,119 +296,6 @@
         function refresh() {
             $('#demo-table').bootstrapTable('refresh');
         }
-
-//         function submit() {
-//             $.confirm({
-//                 title : '提示！',
-//                 content : '确定保存吗?',
-//                 buttons : {
-//                     ok : {
-//                         text : "确定",
-//                         btnClass : 'btn-primary',
-//                         keys : [ 'enter' ],
-//                         action : function() {
-//                             $.ajax({
-//                                 type : 'post',
-//                                 url : '${ctx}/user/add',
-//                                 data : $('#saveForm').serialize(),
-//                                 dataType : 'json',
-//                                 success : function() {
-//                                     $('#myModal').modal('hide');
-//                                 }
-//                             });
-
-//                         }
-//                     },
-//                     cancel : {
-//                         text : "取消",
-//                         btnClass : 'btn-primary',
-//                         keys : [ 'esc' ],
-//                         action : function() {
-//                         }
-
-//                     }
-//                 }
-//             });
-//         }
-
-//         function creat() {
-//             $(':input', '#saveForm').not(':button,:submit,:reset') //将myform表单中input元素type为button、submit、reset、hidden排除
-//             .val('') //将input元素的value设为空值
-//             .removeAttr('checked');
-//             $('#myModal').modal('show');
-//         }
-
-//         function edit() {
-//             var selectRow = $("#demo-table").bootstrapTable('getSelections');
-//             if (selectRow.length != 1) {
-//                 alert('请选择并只能选择一条数据进行编辑！');
-//                 return false;
-//             }
-//             var id = selectRow[0].userId;
-//             $(':input', '#saveForm').not(':button,:submit,:reset') //将myform表单中input元素type为button、submit、reset、hidden排除
-//             .val('') //将input元素的value设为空值
-//             .removeAttr('checked')
-
-//             $('#myModal').modal('show');
-//             $.ajax({
-//                 type : 'get',
-//                 url : '${ctx}/user' + '/' + id + '?time=' + new Date().getTime(),
-//                 dataType : 'json',
-//                 success : function(data) {
-//                     var obj = data.data.obj;
-//                     for ( var o in obj) {
-//                         var e = '#myModal' + ' input[name=' + o + ']';
-//                         $(e).val(obj[o]);
-//                     }
-//                 }
-
-//             })
-//         }
-
-//         function remove() {
-//             var selectRow = $("#demo-table").bootstrapTable('getSelections');
-//             if (selectRow.length != 1) {
-//                 alert('请选择并只能选择一条数据进行编辑！');
-//                 return false;
-//             }
-//             var id = selectRow[0].userId;
-
-//             $.confirm({
-//                 title : '提示！',
-//                 content : '确定删除吗?',
-//                 buttons : {
-//                     ok : {
-//                         text : "确定",
-//                         btnClass : 'btn-primary',
-//                         keys : [ 'enter' ],
-//                         action : function() {
-//                             $.ajax({
-//                                 type : 'post',
-//                                 url : '${ctx}/user/remove',
-//                                 data : {
-//                                     id : id
-//                                 },
-//                                 dataType : 'json',
-//                                 success : function(result) {
-//                                     if (result.success) {
-//                                         refresh();
-//                                     }
-//                                 }
-//                             });
-
-//                         }
-//                     },
-//                     cancel : {
-//                         text : "取消",
-//                         btnClass : 'btn-primary',
-//                         keys : [ 'esc' ],
-//                         action : function() {
-//                         }
-
-//                     }
-//                 }
-//             });
-//         }
     </script>
 </body>
 </html>
