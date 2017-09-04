@@ -49,12 +49,18 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void save(User user) {
+    public Retval save(User user) {
+        Retval retval = Retval.newInstance();
         try {
-            userService.saveUser(user);
+            if(user.getUserId() == null){
+                userService.saveUser(user);
+            }else{
+                userService.updateUser(user);
+            }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
+        return retval;
     }
 
     @ResponseBody
