@@ -1,6 +1,7 @@
 package com.wyj.service.data.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.wyj.dao.data.DataDictDao;
 import com.wyj.entity.data.DataDict;
 import com.wyj.service.data.DataDictService;
+
 /**
  * 
  * 
@@ -42,8 +44,13 @@ public class DataDictServiceImpl implements DataDictService {
     }
 
     @Override
-    public List<DataDict> listDataDict() {
-        return dataDictDao.listDataDict();
+    public List<DataDict> listDataDict(DataDict dataDict) {
+        return dataDictDao.listDataDict(dataDict);
+    }
+
+    @Override
+    public List<Map<Long, String>> getDataDictByGroupCode(String groupCode) {
+        return dataDictDao.getDataDictByGroupCode(groupCode);
     }
 
 }

@@ -23,7 +23,7 @@
 		SELECT * FROM B_BP_DATAGROUP
 	</select>
 	<resultMap type="com.wyj.entity.data.DataGroup" id="dataGroupList">
-		<result property="groupId" column="groupId" />
+		<id property="groupId" column="groupId" />
 		<result property="groupCode" column="groupCode" />
 		<result property="groupName" column="groupName" />
 		<result property="remark" column="remark" />

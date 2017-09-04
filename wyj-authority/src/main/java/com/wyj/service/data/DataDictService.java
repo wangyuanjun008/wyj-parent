@@ -1,6 +1,7 @@
 package com.wyj.service.data;
 
 import java.util.List;
+import java.util.Map;
 
 import com.wyj.entity.data.DataDict;
 /**
@@ -20,5 +21,7 @@ public interface DataDictService {
 
     public void updateDataDict(DataDict DataDict);
 
-    public List<DataDict> listDataDict();
+    public List<DataDict> listDataDict(DataDict dataDict);
+    
+    public List<Map<Long, String>> getDataDictByGroupCode(String groupCode);
 }

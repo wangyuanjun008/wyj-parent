@@ -2,33 +2,55 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.wyj.dao.data.DataDictDao">
-	<select id="getDataDictById" parameterType="java.lang.Long" resultType="com.wyj.entity.data.DataDict">
-		SELECT * FROM B_BP_DATADICT WHERE
-		dictId=#{dictId}
+	<select id="getDataDictById" parameterType="java.lang.Long"
+		resultMap="dataDictList">
+		SELECT * FROM B_BP_DATADICT t1,B_BP_DATAGROUP t2 WHERE t1.dataGroupId = t2.groupId AND
+		t1.dictId=#{dictId}
 	</select>
 	<insert id="saveDataDict" parameterType="com.wyj.entity.data.DataDict">
-		INSERT INTO B_BP_DATADICT(dictCode,dictName,groupCode,remark,status,
-		dictParentId) VALUES (#{dictCode},#{dictName},#{groupCode},#{remark},#{status},#{dictParentId})
+		INSERT INTO
+		B_BP_DATADICT(dictCode,dictName,dataGroupId,remark,status,
+		dictParentId)
+		VALUES
+		(#{dictCode},#{dictName},#{dataGroup.groupId},#{remark},#{status},#{dictParentId})
 	</insert>
 	<delete id="removeDataDictById" parameterType="java.lang.Long">
-		DELETE FROM B_BP_DATADICT WHERE
+		DELETE FROM
+		B_BP_DATADICT WHERE
 		dictId=#{dictId}
 	</delete>
 
 	<update id="updateDataDict" parameterType="com.wyj.entity.data.DataDict">
 		UPDATE B_BP_DATADICT
-		SET dictCode = #{dictCode},dictName=#{dictName},groupCode=#{groupCode},remark=#{remark},status=#{status},dictParentId=#{dictParentId}
+		SET dictCode =
+		#{dictCode},dictName=#{dictName},dataGroupId=#{dataGroup.groupId},remark=#{remark},status=#{status},dictParentId=#{dictParentId}
+		WHERE dictId = #{dictId}
 	</update>
-	<select id="listDataDict" resultMap="dataDictList">
+	<select id="listDataDict" resultMap="dataDictList"
+		parameterType="com.wyj.entity.data.DataDict">
 		SELECT * FROM B_BP_DATADICT
+		<where>
+			<if test="dataGroup != null and dataGroup.groupId != null">
+				dataGroupId = #{dataGroup.groupId}
+			</if>
+		</where>
 	</select>
+
+	<select id="getDataDictByGroupCode" resultType="map"
+		parameterType="java.lang.String">
+		SELECT t1.dictId as id,t1.dictName as text
+		FROM B_BP_DATADICT t1,B_BP_DATAGROUP t2 WHERE t1.dataGroupId = t2.groupId AND t2.groupCode=#{groupCode}
+	</select>
+
 	<resultMap type="com.wyj.entity.data.DataDict" id="dataDictList">
-		<result property="dictId" column="dictId" />
+		<id property="dictId" column="dictId" />
 		<result property="dictCode" column="dictCode" />
 		<result property="dictName" column="dictName" />
-		<result property="groupCode" column="groupCode" />
 		<result property="remark" column="remark" />
 		<result property="status" column="status" />
 		<result property="dictParentId" column="dictParentId" />
+		<association property="dataGroup" column="dataGroupId"
+			resultMap="com.wyj.dao.data.DataGroupDao.dataGroupList"></association>
 	</resultMap>
+
 </mapper>

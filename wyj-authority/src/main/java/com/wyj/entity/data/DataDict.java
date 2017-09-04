@@ -19,7 +19,9 @@ public class DataDict extends BaseEntity {
 
     private String dictName;// 名称
 
-    private String groupCode;// 分组编码
+    // private String groupCode;// 分组编码
+
+    private DataGroup dataGroup;
 
     private String remark;// 描述
 
@@ -51,12 +53,12 @@ public class DataDict extends BaseEntity {
         this.dictName = dictName;
     }
 
-    public String getGroupCode() {
-        return groupCode;
+    public DataGroup getDataGroup() {
+        return dataGroup;
     }
 
-    public void setGroupCode(String groupCode) {
-        this.groupCode = groupCode;
+    public void setDataGroup(DataGroup dataGroup) {
+        this.dataGroup = dataGroup;
     }
 
     public String getRemark() {

@@ -1,4 +1,4 @@
-package com.wyj.entity.data;//
+package com.wyj.entity.data;
 
 import com.wyj.entity.base.BaseEntity;
 

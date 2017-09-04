@@ -50,7 +50,8 @@ public class DataGroupController {
 
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void save(DataGroup dataGroup) {
+    public Retval save(DataGroup dataGroup) {
+        Retval retval = Retval.newInstance();
         try {
             if(dataGroup.getGroupId() == null){
                 dataGroupService.saveDataGroup(dataGroup);
@@ -60,6 +61,7 @@ public class DataGroupController {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
+        return retval;
     }
 
     @ResponseBody
