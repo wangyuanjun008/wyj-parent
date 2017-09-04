@@ -13,11 +13,15 @@ function save(model){
                         url : model.saveURL,
                         data : $('#' + model.formId).serialize(),
                         dataType : 'json',
-                        success : function() {
+                        success : function(result) {
                             if (result.success) {
                                 refresh();
+                                $('#' + model.id).modal('hide');
                             }
-                            $('#' + model.id).model('hide');
+                            
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert("请求异常");
                         }
                     });
 
@@ -41,6 +45,7 @@ function creat(model) {
     .val('') //将input元素的value设为空值
     .removeAttr('checked');
     $('#' + model.id).modal('show');
+    myCreate(model);
 }
 
 function edit(model) {
@@ -71,6 +76,7 @@ function edit(model) {
                 var e = '#' + model.id + ' input[name=' + o + ']';
                 $(e).val(obj[o]);
             }
+            myEdit(obj,model);
         }
 
     })
@@ -82,7 +88,13 @@ function remove(model) {
         alert('请选择并只能选择一条数据进行编辑！');
         return false;
     }
-    var id = selectRow[0].tableId;
+    var selectRowData = selectRow[0];
+    var id;
+    for(var entityId in selectRowData){
+        if(model.entityId == entityId){
+            id = selectRowData[entityId];
+        }
+    }
 
     $.confirm({
         title : '提示！',

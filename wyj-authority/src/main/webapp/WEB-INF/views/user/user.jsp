@@ -66,7 +66,7 @@
 							<div class="col-sm-3">
 								<input type="text" class="form-control" name="phone">
 							</div>
-							<label class="col-sm-1 control-label">性别:</label> <select id="sel_menu2" class="col-sm-1 form-control select2">
+							<label class="col-sm-1 control-label">性别:</label> <select id="sel_sex" name="sex" class="col-sm-1 form-control select2">
 							</select>
 						</div>
 						<div class="form-group">
@@ -118,18 +118,37 @@
 
         $(function() {
             initTable();
-            $("#sel_menu2").select2({
+            $("#sel_sex").select2({
                 placeholder : "--请选择--",
                 dropdownParent : $("#myModal"),
                 allowClear : true,
-                width : 180,
-                data : [ {
-                    id : 1,
-                    text : '男'
-                }, {
-                    id : 2,
-                    text : '女'
-                } ]
+                width : 150,
+                ajax : {
+                    url : '${ctx}/dataDict/getData?groupCode='+'sex',
+                    dataType : 'json',
+                    type : 'get',
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term 请求参数
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        /*var itemList = [];//当数据对象不是{id:0,text:'ANTS'}这种形式的时候，可以使用类似此方法创建新的数组对象
+                        var arr = data.result.list
+                        for(item in arr){
+                            itemList.push({id: item, text: arr[item]})
+                        }*/
+                        return {
+                            results: data,//itemList
+                            pagination: {
+                                more: (params.page * 30) < data.total_count
+                            }
+                        };
+                    },
+                    cache: true
+                }
             });
         });
 
@@ -139,8 +158,8 @@
         function initTable() {
             var url = "${ctx}/user/list";
             $('#demo-table').bootstrapTable({
-                //                 url : '${bathPath}/data/data1.json',
                 method : 'post',
+                contentType : 'application/x-www-form-urlencoded',
                 url : url,
                 editable : true,//开启编辑模式
                 height : $(window).height() - 110,//定义表格的高度。
@@ -159,8 +178,6 @@
                 paginationLoop : false,//设置为 true 启用分页条无限循环的功能
                 pageList : [ 5, 10, 20 ],
                 classes : 'table table-hover table-no-bordered',
-                //sidePagination: 'server',
-                //silentSort: false,
                 smartDisplay : false,
                 idField : 'userId',//指定主键列
                 sortName : 'userId',
@@ -229,10 +246,6 @@
 
         function queryParams(params) {
             var param = {
-                //                 orgCode : $("#orgCode").val(),
-                //                 userName : $("#userName").val(),
-                //                 startDate : $("#startDate").val(),
-                //                 endDate : $("#endDate").val(),
                 limit : this.limit, // 页面大小
                 offset : this.offset, // 页码
                 pageindex : this.pageNumber,
@@ -261,118 +274,6 @@
             $('#demo-table').bootstrapTable('refresh');
         }
 
-        //         function submit() {
-        //             $.confirm({
-        //                 title : '提示！',
-        //                 content : '确定保存吗?',
-        //                 buttons : {
-        //                     ok : {
-        //                         text : "确定",
-        //                         btnClass : 'btn-primary',
-        //                         keys : [ 'enter' ],
-        //                         action : function() {
-        //                             $.ajax({
-        //                                 type : 'post',
-        //                                 url : '${ctx}/user/add',
-        //                                 data : $('#saveForm').serialize(),
-        //                                 dataType : 'json',
-        //                                 success : function() {
-        //                                     $('#myModal').modal('hide');
-        //                                 }
-        //                             });
-
-        //                         }
-        //                     },
-        //                     cancel : {
-        //                         text : "取消",
-        //                         btnClass : 'btn-primary',
-        //                         keys : [ 'esc' ],
-        //                         action : function() {
-        //                         }
-
-        //                     }
-        //                 }
-        //             });
-        //         }
-
-        //         function creat() {
-        //             $(':input', '#saveForm').not(':button,:submit,:reset') //将myform表单中input元素type为button、submit、reset、hidden排除
-        //             .val('') //将input元素的value设为空值
-        //             .removeAttr('checked');
-        //             $('#myModal').modal('show');
-        //         }
-
-        //         function edit() {
-        //             var selectRow = $("#demo-table").bootstrapTable('getSelections');
-        //             if (selectRow.length != 1) {
-        //                 alert('请选择并只能选择一条数据进行编辑！');
-        //                 return false;
-        //             }
-        //             var id = selectRow[0].userId;
-        //             $(':input', '#saveForm').not(':button,:submit,:reset') //将myform表单中input元素type为button、submit、reset、hidden排除
-        //             .val('') //将input元素的value设为空值
-        //             .removeAttr('checked')
-
-        //             $('#myModal').modal('show');
-        //             $.ajax({
-        //                 type : 'get',
-        //                 url : '${ctx}/user' + '/' + id + '?time=' + new Date().getTime(),
-        //                 dataType : 'json',
-        //                 success : function(data) {
-        //                     var obj = data.data.obj;
-        //                     for ( var o in obj) {
-        //                         var e = '#myModal' + ' input[name=' + o + ']';
-        //                         $(e).val(obj[o]);
-        //                     }
-        //                 }
-
-        //             })
-        //         }
-
-        //         function remove() {
-        //             var selectRow = $("#demo-table").bootstrapTable('getSelections');
-        //             if (selectRow.length != 1) {
-        //                 alert('请选择并只能选择一条数据进行编辑！');
-        //                 return false;
-        //             }
-        //             var id = selectRow[0].userId;
-
-        //             $.confirm({
-        //                 title : '提示！',
-        //                 content : '确定删除吗?',
-        //                 buttons : {
-        //                     ok : {
-        //                         text : "确定",
-        //                         btnClass : 'btn-primary',
-        //                         keys : [ 'enter' ],
-        //                         action : function() {
-        //                             $.ajax({
-        //                                 type : 'post',
-        //                                 url : '${ctx}/user/remove',
-        //                                 data : {
-        //                                     id : id
-        //                                 },
-        //                                 dataType : 'json',
-        //                                 success : function(result) {
-        //                                     if (result.success) {
-        //                                         refresh();
-        //                                     }
-        //                                 }
-        //                             });
-
-        //                         }
-        //                     },
-        //                     cancel : {
-        //                         text : "取消",
-        //                         btnClass : 'btn-primary',
-        //                         keys : [ 'esc' ],
-        //                         action : function() {
-        //                         }
-
-        //                     }
-        //                 }
-        //             });
-        //         }
     </script>
 </body>
 </html>
