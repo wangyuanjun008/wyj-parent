@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.wyj.dao.system.MenuMapper">
+	<select id="getObjectById" parameterType="java.lang.Long"
+		resultMap="menuList">
+		SELECT * FROM s_auth_menu t WHERE t.menuId=#{value}
+	</select>
+	<insert id="save" parameterType="com.wyj.entity.system.Menu">
+		INSERT INTO
+		s_auth_menu(parentId,name,url,perms,orderNum,
+		isUse,createTime,createUserId)
+		VALUES
+		(#{parentId},#{name},#{url},#{perms},#{orderNum},#{isUse},#{createTime,jdbcType=DATE},#{createUserId})
+	</insert>
+	<delete id="remove" parameterType="java.lang.Long">
+		DELETE FROM
+		s_auth_menu WHERE
+		menuId=#{value}
+	</delete>
+	
+	<delete id="batchRemove" parameterType="java.lang.Long">
+		DELETE FROM
+		s_auth_menu WHERE
+		menuId IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<update id="update" parameterType="com.wyj.entity.system.Menu">
+		UPDATE s_auth_menu
+		SET
+		parentId =
+		#{parentId},name=#{name},url=#{url},perms=#{perms},orderNum=#{orderNum},isUse=#{isUse},modifyTime=#{modifyTime,jdbcType=DATE},modifyUserId=#{modifyUserId}
+		WHERE menuId=#{menuId}
+	</update>
+	<select id="list" resultMap="menuList" parameterType="com.wyj.entity.system.Menu">
+		SELECT * FROM s_auth_menu
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="parentId != null">
+				AND parentId = #{parentId}
+			</if>
+		</trim>
+		ORDER BY orderNum ASC
+	</select>
+	<select id="listOneNodeMenus" resultMap="menuList" parameterType="com.wyj.entity.system.Menu">
+		SELECT * FROM s_auth_menu WHERE ISNULL(parentId) ORDER BY orderNum ASC
+	</select>
+
+	<resultMap type="com.wyj.entity.system.Menu" id="menuList">
+		<id property="menuId" column="menuId" />
+		<result property="parentId" column="parentId" />
+		<result property="name" column="name" />
+		<result property="url" column="url" />
+		<result property="perms" column="perms" />
+		<result property="orderNum" column="orderNum" />
+		<result property="isUse" column="is_use" />
+		<result property="createTime" jdbcType="DATE" javaType="java.util.Date"
+			column="createTime" />
+		<result property="createUserId" column="createUserId" />
+		<result property="modifyTime" jdbcType="DATE" javaType="java.util.Date"
+			column="modifyTime" />
+		<result property="modifyUserId" column="modifyUserId" />
+	</resultMap>
+
+</mapper>

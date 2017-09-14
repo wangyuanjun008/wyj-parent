@@ -6,9 +6,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wyj.dao.data.DataDictDao;
+import com.wyj.dao.BaseMapper;
+import com.wyj.dao.data.DataDictMapper;
 import com.wyj.entity.data.DataDict;
 import com.wyj.service.data.DataDictService;
+import com.wyj.service.impl.BaseServiceImpl;
 
 /**
  * 
@@ -18,39 +20,19 @@ import com.wyj.service.data.DataDictService;
  * @date：2017年8月23日 下午11:54:08
  */
 @Service(value = "DataDictServic")
-public class DataDictServiceImpl implements DataDictService {
+public class DataDictServiceImpl extends BaseServiceImpl<DataDict, Long> implements DataDictService {
 
     @Autowired
-    private DataDictDao dataDictDao;
+    private DataDictMapper dataDictMapper;
 
     @Override
-    public DataDict getDataDictById(Long dictId) {
-        return dataDictDao.getDataDictById(dictId);
-    }
-
-    @Override
-    public void saveDataDict(DataDict DataDict) {
-        dataDictDao.saveDataDict(DataDict);
-    }
-
-    @Override
-    public void removeDataDictById(Long dictId) {
-        dataDictDao.removeDataDictById(dictId);
-    }
-
-    @Override
-    public void updateDataDict(DataDict DataDict) {
-        dataDictDao.updateDataDict(DataDict);
-    }
-
-    @Override
-    public List<DataDict> listDataDict(DataDict dataDict) {
-        return dataDictDao.listDataDict(dataDict);
+    public BaseMapper<DataDict, Long> getMapper() {
+        return dataDictMapper;
     }
 
     @Override
     public List<Map<Long, String>> getDataDictByGroupCode(String groupCode) {
-        return dataDictDao.getDataDictByGroupCode(groupCode);
+        return dataDictMapper.getDataDictByGroupCode(groupCode);
     }
 
 }

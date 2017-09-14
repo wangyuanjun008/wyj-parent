@@ -24,19 +24,20 @@ $(function() {
 // 登录
 function login() {
 	$.ajax({
-		url: BASE_PATH + '/sso/login',
+		url: 'o${bathPath}/lgin',
 		type: 'POST',
 		data: {
 			username: $('#username').val(),
-			password: $('#password').val(),
-			rememberMe: $('#rememberMe').is(':checked'),
-			backurl: BACK_URL
+			password: $('#password').val()//,
+			//rememberMe: $('#rememberMe').is(':checked')
+//			backurl: BACK_URL
 		},
-		beforeSend: function() {
-
-		},
-		success: function(json){
-			if (json.code == 1) {
+//		beforeSend: function() {
+//
+//		},
+		success: function(result){
+		    console.log(result);
+			if (result == 'success') {
 				location.href = json.data;
 			} else {
 				alert(json.data);

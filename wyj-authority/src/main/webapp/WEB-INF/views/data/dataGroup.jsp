@@ -60,7 +60,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-4 control-label">使用状态:</label> <select id="sel_status" name="status" class="col-sm-1 form-control select2">
+							<label class="col-sm-4 control-label">使用状态:</label> <select id="status" name="status" class="col-sm-1 form-control select2">
 							</select>
 						</div>
 						<input type="hidden" name="groupId">
@@ -94,45 +94,29 @@
             editTitle : "编辑分组",
             editURL : "${ctx}/dataGroup",
             saveURL : "${ctx}/dataGroup/add",
-            removeURL : "${ctx}/dataGroup/remove"
+            removeURL : "${ctx}/dataGroup/remove",
+            dataURL : '${ctx}/dataDict/getData?groupCode='
         }
 
+        var dataStore = getDataStore(model.dataURL+'yesOrNo');
         $(function() {
             initTable();
-            $("#sel_status").select2({
+            $("#status").select2({
                 placeholder : "--请选择--",
                 dropdownParent : $("#myModal"),
                 allowClear : true,
                 width : 150,
-                ajax : {
-                    url : '${ctx}/dataDict/getData?groupCode='+'yesOrNo',
-                    dataType : 'json',
-                    type : 'get',
-                    data: function (params) {
-                        return {
-                            q: params.term, // search term 请求参数
-                            page: params.page
-                        };
-                    },
-                    processResults: function (data, params) {
-                        params.page = params.page || 1;
-                        /*var itemList = [];//当数据对象不是{id:0,text:'ANTS'}这种形式的时候，可以使用类似此方法创建新的数组对象
-                        var arr = data.result.list
-                        for(item in arr){
-                            itemList.push({id: item, text: arr[item]})
-                        }*/
-                        return {
-                            results: data,//itemList
-                            pagination: {
-                                more: (params.page * 30) < data.total_count
-                            }
-                        };
-                    },
-                    cache: true
-                }
+                minimumResultsForSearch: -1,
+                data : dataStore
             });
         });
-function myEdit(){}
+        function myCreate(){
+            
+        }
+        
+        function myEdit() {
+            $("#status").val("16").trigger("change");
+        }
         function doQuery(params) {
             $('#demo-table').bootstrapTable('refresh'); //刷新表格
         }

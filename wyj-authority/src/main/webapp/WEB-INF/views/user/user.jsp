@@ -58,26 +58,29 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-1 control-label">年龄:</label>
-							<div class="col-sm-3">
-								<input type="text" class="form-control" name="age">
-							</div>
 							<label class="col-sm-1 control-label">手机号码:</label>
 							<div class="col-sm-3">
 								<input type="text" class="form-control" name="phone">
 							</div>
-							<label class="col-sm-1 control-label">性别:</label> <select id="sel_sex" name="sex" class="col-sm-1 form-control select2">
-							</select>
-						</div>
-						<div class="form-group">
 							<label class="col-sm-1 control-label">邮箱:</label>
 							<div class="col-sm-3">
 								<input type="text" class="form-control" name="email">
 							</div>
+							<label class="col-sm-1 control-label">性别:</label> <select id="sex" name="sex" class="col-sm-1 form-control select2">
+							</select>
+
+						</div>
+						<div class="form-group">
 							<label class="col-sm-1 control-label">地址:</label>
 							<div class="col-sm-3">
 								<input type="text" class="form-control" name="address">
 							</div>
+							<div>
+							<label class="col-sm-1 control-label">可选角色:</label>
+							<select id="roles" name="roles" class="col-sm-3 form-control select2">
+							</select>
+							</div>
+
 						</div>
 						<div class="form-group"></div>
 						<input type="hidden" name="userId">
@@ -87,13 +90,11 @@
 
 				<div class="modal-footer" style="border: none; margin-left: 40%; padding-bottom: 20px;">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" onclick="submit(model);">提交</button>
+					<button type="button" class="btn btn-primary" onclick="save(model);">提交</button>
 				</div>
 			</div>
 		</div>
 	</div>
-
-
 	<script src="${bathPath}/plugins/jquery-3.2.1/jquery-3.2.1.min.js"></script>
 	<script src="${bathPath}/plugins/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 	<script src="${bathPath}/plugins/bootstrap-table-1.11.1/bootstrap-table.min.js"></script>
@@ -102,7 +103,6 @@
 	<script src="${bathPath}/plugins/select2-4.0.3/dist/js/select2.min.js"></script>
 	<script src="${bathPath}/plugins/select2-4.0.3/dist/js/i18n/zh-CN.js"></script>
 	<script src="${bathPath}/js/base.js"></script>
-
 
 	<script type="text/javascript">
         var model = {
@@ -113,42 +113,34 @@
             editTitle : "编辑字典",
             editURL : "${ctx}/user",
             saveURL : "${ctx}/user/add",
-            removeURL : "${ctx}/user/remove"
+            removeURL : "${ctx}/user/remove",
+            dataURL : '${ctx}/dataDict/getData?groupCode='
         }
-
+        var sexStore = getDataStore(model.dataURL+'sex');
+        var roleStore = getDataStore('${ctx}/role/getAllRoles');
+        function myCreate(model) {}
+        
+        function myEdit(obj,model){}
+        
         $(function() {
             initTable();
-            $("#sel_sex").select2({
+            $("#sex").select2({
                 placeholder : "--请选择--",
                 dropdownParent : $("#myModal"),
                 allowClear : true,
                 width : 150,
-                ajax : {
-                    url : '${ctx}/dataDict/getData?groupCode='+'sex',
-                    dataType : 'json',
-                    type : 'get',
-                    data: function (params) {
-                        return {
-                            q: params.term, // search term 请求参数
-                            page: params.page
-                        };
-                    },
-                    processResults: function (data, params) {
-                        params.page = params.page || 1;
-                        /*var itemList = [];//当数据对象不是{id:0,text:'ANTS'}这种形式的时候，可以使用类似此方法创建新的数组对象
-                        var arr = data.result.list
-                        for(item in arr){
-                            itemList.push({id: item, text: arr[item]})
-                        }*/
-                        return {
-                            results: data,//itemList
-                            pagination: {
-                                more: (params.page * 30) < data.total_count
-                            }
-                        };
-                    },
-                    cache: true
-                }
+                minimumResultsForSearch: -1,
+                data : sexStore
+            });
+            $("#roles").select2({
+                placeholder : "--请选择--",
+                dropdownParent : $("#myModal"),
+                allowClear : true,
+                multiple: true,
+                width : 180,
+                minimumResultsForSearch: -1,
+                data : roleStore,
+                multiple: true
             });
         });
 
@@ -273,7 +265,6 @@
         function refresh() {
             $('#demo-table').bootstrapTable('refresh');
         }
-
     </script>
 </body>
 </html>

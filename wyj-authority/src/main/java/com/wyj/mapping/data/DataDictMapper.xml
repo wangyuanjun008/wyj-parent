@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.wyj.dao.data.DataDictDao">
-	<select id="getDataDictById" parameterType="java.lang.Long"
+<mapper namespace="com.wyj.dao.data.DataDictMapper">
+	<select id="getObjectById" parameterType="java.lang.Long"
 		resultMap="dataDictList">
-		SELECT * FROM B_BP_DATADICT t1,B_BP_DATAGROUP t2 WHERE t1.dataGroupId = t2.groupId AND
-		t1.dictId=#{dictId}
+		SELECT * FROM b_bd_datadict t1,b_bd_datagroup t2 WHERE t1.dataGroupId = t2.groupId AND
+		t1.dictId=#{value}
 	</select>
-	<insert id="saveDataDict" parameterType="com.wyj.entity.data.DataDict">
+	<insert id="save" parameterType="com.wyj.entity.data.DataDict">
 		INSERT INTO
-		B_BP_DATADICT(dictCode,dictName,dataGroupId,remark,status,
+		b_bd_datadict(dictCode,dictName,dataGroupId,remark,status,
 		dictParentId)
 		VALUES
 		(#{dictCode},#{dictName},#{dataGroup.groupId},#{remark},#{status},#{dictParentId})
 	</insert>
-	<delete id="removeDataDictById" parameterType="java.lang.Long">
+	<delete id="remove" parameterType="java.lang.Long">
 		DELETE FROM
-		B_BP_DATADICT WHERE
-		dictId=#{dictId}
+		b_bd_datadict WHERE
+		dictId=#{value}
 	</delete>
 
-	<update id="updateDataDict" parameterType="com.wyj.entity.data.DataDict">
-		UPDATE B_BP_DATADICT
+	<update id="update" parameterType="com.wyj.entity.data.DataDict">
+		UPDATE b_bd_datadict
 		SET dictCode =
 		#{dictCode},dictName=#{dictName},dataGroupId=#{dataGroup.groupId},remark=#{remark},status=#{status},dictParentId=#{dictParentId}
-		WHERE dictId = #{dictId}
+		WHERE dictId = #{value}
 	</update>
-	<select id="listDataDict" resultMap="dataDictList"
+	<select id="list" resultMap="dataDictList"
 		parameterType="com.wyj.entity.data.DataDict">
-		SELECT * FROM B_BP_DATADICT
+		SELECT * FROM b_bd_datadict
 		<where>
 			<if test="dataGroup != null and dataGroup.groupId != null">
 				dataGroupId = #{dataGroup.groupId}
@@ -39,7 +39,7 @@
 	<select id="getDataDictByGroupCode" resultType="map"
 		parameterType="java.lang.String">
 		SELECT t1.dictId as id,t1.dictName as text
-		FROM B_BP_DATADICT t1,B_BP_DATAGROUP t2 WHERE t1.dataGroupId = t2.groupId AND t2.groupCode=#{groupCode}
+		FROM b_bd_datadict t1,b_bd_datagroup t2 WHERE t1.dataGroupId = t2.groupId AND t2.groupCode=#{groupCode}
 	</select>
 
 	<resultMap type="com.wyj.entity.data.DataDict" id="dataDictList">
@@ -49,8 +49,7 @@
 		<result property="remark" column="remark" />
 		<result property="status" column="status" />
 		<result property="dictParentId" column="dictParentId" />
-		<association property="dataGroup" column="dataGroupId"
-			resultMap="com.wyj.dao.data.DataGroupDao.dataGroupList"></association>
+		<association property="dataGroup" column="dataGroupId" resultMap="com.wyj.dao.data.DataGroupMapper.dataGroupList"></association>
 	</resultMap>
 
 </mapper>

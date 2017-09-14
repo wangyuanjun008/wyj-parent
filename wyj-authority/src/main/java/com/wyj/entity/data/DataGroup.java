@@ -1,6 +1,6 @@
 package com.wyj.entity.data;
 
-import com.wyj.entity.base.BaseEntity;
+import com.wyj.entity.BaseEntity;
 
 /**
  * 数据分组

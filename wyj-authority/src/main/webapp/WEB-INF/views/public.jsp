@@ -126,34 +126,35 @@
 			<!-- 菜单区 -->
 			<ul class="main-menu"">
 				<li><a class="waves-effect" href="javascript:Tab.addTab('首页', 'home');"><i class="zmdi zmdi-home"></i> 首页</a></li>
-				<li class="sub-menu system_menus system_1 0"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-accounts-list"></i> 系统组织管理</a>
+				<li class="sub-menu"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-accounts-list"></i> 系统组织管理</a>
 					<ul>
 						<li><a class="waves-effect" href="javascript:Tab.addTab('系统管理', '${ctx}/user/index');">系统管理</a></li>
 						<li><a href="crud.html" target="iframepage">仓库管理</a></li>
 						<li><a class="waves-effect" href="javascript:Tab.addTab('组织管理', '/manage/organization/index');">组织管理</a></li>
 					</ul></li>
-				<li class="sub-menu system_menus system_1 3"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-accounts"></i> 角色用户管理</a>
+				<li class="sub-menu"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-accounts"></i> 角色用户管理</a>
 					<ul>
-						<li><a class="waves-effect" href="javascript:Tab.addTab('角色管理', '/manage/role/index');">角色管理</a></li>
+						<li><a class="waves-effect" href="javascript:Tab.addTab('角色管理', '${ctx}/role/index');">角色管理</a></li>
 						<li><a class="waves-effect" href="javascript:Tab.addTab('用户管理', '${ctx}/user/index');">用户管理</a></li>
 					</ul></li>
-				<li class="sub-menu system_menus system_1 6"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-lock-outline"></i> 权限资源管理</a>
+				<li class="sub-menu"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-lock-outline"></i> 权限资源管理</a>
 					<ul>
-						<li><a class="waves-effect" href="javascript:Tab.addTab('权限管理', '/manage/permission/index');">权限管理</a></li>
+						<li><a class="waves-effect" href="javascript:Tab.addTab('菜单管理', '${ctx}/menu/index');">菜单管理</a></li>
+						<li><a class="waves-effect" href="javascript:Tab.addTab('权限管理', '${ctx}/auth/index');">权限管理</a></li>
 					</ul></li>
-				<li class="sub-menu system_menus system_1 7"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-more"></i> 其他数据管理</a>
+				<li class="sub-menu"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-more"></i> 其他数据管理</a>
 					<ul>
 						<li><a class="waves-effect" href="javascript:Tab.addTab('数据分组', '${ctx}/dataGroup/index');">数据分组</a></li>
 						<li><a class="waves-effect" href="javascript:Tab.addTab('数据字典', '${ctx}/dataDict/index');">数据字典</a></li>
 						<li><a class="waves-effect" href="javascript:Tab.addTab('日志记录', '/manage/log/index');">日志记录</a></li>
 						<li><a class="waves-effect" href="javascript:Tab.addTab('键值设置', '/manage/map/index');">键值设置</a></li>
 					</ul></li>
-				<li class="sub-menu system_menus system_2 12" style="display: none;"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-menu"></i> 标签类目管理</a>
+				<li class="sub-menu" style="display: none;"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-menu"></i> 标签类目管理</a>
 					<ul>
 						<li><a class="waves-effect" href="javascript:Tab.addTab('标签管理', '/manage/tag/index');">标签管理</a></li>
 						<li><a class="waves-effect" href="javascript:Tab.addTab('类目管理', '/manage/category/index');">类目管理</a></li>
 					</ul></li>
-				<li class="sub-menu system_menus system_2 15" style="display: none;"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-collection-text"></i> 文章内容管理</a>
+				<li class="sub-menu" style="display: none;"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-collection-text"></i> 文章内容管理</a>
 					<ul>
 						<li><a class="waves-effect" href="javascript:Tab.addTab('文章管理', '/manage/article/index');">文章管理</a></li>
 						<li><a class="waves-effect" href="javascript:Tab.addTab('回收管理', '/manage/article/recycle');">回收管理</a></li>
