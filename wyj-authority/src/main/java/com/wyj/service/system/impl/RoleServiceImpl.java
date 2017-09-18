@@ -1,5 +1,8 @@
 package com.wyj.service.system.impl;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,6 +10,7 @@ import com.wyj.dao.BaseMapper;
 import com.wyj.dao.system.RoleMapper;
 import com.wyj.entity.system.Role;
 import com.wyj.service.impl.BaseServiceImpl;
+import com.wyj.service.system.RoleRelMenuService;
 import com.wyj.service.system.RoleService;
 import com.wyj.service.system.UserRelRoleService;
 
@@ -26,6 +30,9 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, Long> implements Role
     @Autowired
     private UserRelRoleService userRelRoleService;
 
+    @Autowired
+    private RoleRelMenuService roleRelMenuService;
+    
     @Override
     public BaseMapper<Role, Long> getMapper() {
         return roleMapper;
@@ -35,7 +42,42 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, Long> implements Role
     public int batchRemoveRole(Long[] ids) {
         int count = roleMapper.batchRemove(ids);
         userRelRoleService.batchRemoveByRoleId(ids);
+        roleRelMenuService.batchRemoveByRoleId(ids);
         return count;
     }
+
+    @Override
+    public Role getRoleById(Long roleId) {
+        Role role = roleMapper.getObjectById(roleId);
+        List<Long> menuIds = roleRelMenuService.listMenuIdByRoleId(roleId);
+        role.setMenus(menuIds);
+        return role;
+    }
+
+    @Override
+    public int updateRoleAuthorization(Role role) {
+        Long roleId = role.getRoleId();
+        int count = roleRelMenuService.remove(roleId);
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("roleId", roleId);
+        List<Long> menuIds = role.getMenus();
+        if(menuIds.size() > 0) {
+            hashMap.put("menus", menuIds);
+            count = roleRelMenuService.save(hashMap);
+        }
+        return count;
+    }
+
+//    @Override
+//    public int saveRole(Role role) {
+//        // TODO Auto-generated method stub
+//        return 0;
+//    }
+//
+//    @Override
+//    public int updateRole(Role role) {
+//        // TODO Auto-generated method stub
+//        return 0;
+//    }
 
 }

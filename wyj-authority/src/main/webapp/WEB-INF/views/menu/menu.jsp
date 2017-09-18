@@ -68,7 +68,7 @@
 								<label class="col-sm-1 control-label">是否使用:</label> <select id="isUse" name="isUse" class="col-sm-1 form-control select2">
 								</select>
 							</div>
-							<input type="hidden" name="menuId" /> <input type="hidden" name="parentId">
+							<input type="hidden" name="menuId" /> <input type="hidden" name="parentId" /> <input type="hidden" name="type" />
 						</form>
 					</div>
 				</div>
@@ -109,60 +109,55 @@
         //是否有树
         }
 
-        var isUseStore = getDataStore(model.dataURL+'yesOrNo');
-        
-        function setting(url) {
-            var setting = {
-                async : {
+        var isUseStore = getDataStore(model.dataURL + 'yesOrNo');
+
+        var setting = {
+            data : {
+                simpleData : {
                     enable : true,
-                    type : "get",
-                    //表示异步加载采用 post 方法请求
-                    url : url,
-                    autoParam : [ "id", "type" ]
-                //传递节点的id 和 type值给后台(当异步加载数据时)
+                    idKey : "menuId",
+                    pIdKey : "parentId",
+                    rootPId : 0
                 },
+    			key : {
+    			    url: "xUrl"
+    			}
+            },
+            callback : {
+                onClick : zTreeOnClick
+            }
+        };
 
-                callback : {
-                    //                         onAsyncSuccess: zTreeOnAsyncSuccess,
-                    onClick : zTreeOnClick
-                //单击节点事件
-                }
-            };
-
-            return setting;
-        }
+        var ztree;
 
         function zTreeOnClick(event, treeId, treeNode, clickFlag) {
-            if (treeNode.id == 0) {
-                $('#search_menuId').val(null);
-            } else {
-                $('#search_menuId').val(treeNode.id);
-            }
+            $('#search_menuId').val(treeNode.menuId);
 
-            $('#demo-table').bootstrapTable('refresh'); //刷新表格
+            //刷新表格
+            $('#demo-table').bootstrapTable('refresh');
         }
 
         function myCreate(model) {
-            if ($('#search_menuId').val() != 0) {
-                $('#' + model.formId + " input[name='parentId']").val($('#search_menuId').val());
-            } else {
-                $('#' + model.formId + " input[name='parentId']").val(null);
-            }
+            $('#' + model.formId + " input[name='parentId']").val($('#search_menuId').val());
         }
 
         function myEdit(obj, model) {}
-        
+
         $(function() {
+            //加载列表
             initTable();
-            var treeUrl = $("#treeDemo").attr("url");
-            $.fn.zTree.init($("#treeDemo"), setting(treeUrl));
-            
+
+            //加载树
+            var jsonTree = getDataStore($("#treeDemo").attr("url"));
+            ztree = $.fn.zTree.init($("#treeDemo"), setting, jsonTree);
+
+            //加载下拉
             $("#isUse").select2({
                 placeholder : "--请选择--",
                 dropdownParent : $("#myModal"),
                 allowClear : true,
                 width : 150,
-                minimumResultsForSearch: -1,
+                minimumResultsForSearch : -1,
                 data : isUseStore
             });
         });

@@ -24,7 +24,7 @@ public class Role extends BaseEntity {
 
     private String remake;// 描述
 
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     private Long createUserId;
@@ -33,9 +33,7 @@ public class Role extends BaseEntity {
 
     private Long modifyUserId;
 
-//    private List<User> users;
-
-    private List<Auth> auths;
+    private List<Long> menus;
 
     public Long getRoleId() {
         return roleId;
@@ -93,24 +91,16 @@ public class Role extends BaseEntity {
         this.modifyUserId = modifyUserId;
     }
 
-//    public List<User> getUsers() {
-//        return users;
-//    }
-//
-//    public void setUsers(List<User> users) {
-//        this.users = users;
-//    }
-
-    public List<Auth> getAuths() {
-        return auths;
-    }
-
-    public void setAuths(List<Auth> auths) {
-        this.auths = auths;
-    }
-
     public String getRoleType() {
         return roleType;
+    }
+
+    public List<Long> getMenus() {
+        return menus;
+    }
+
+    public void setMenus(List<Long> menus) {
+        this.menus = menus;
     }
 
     public void setRoleType(String roleType) {

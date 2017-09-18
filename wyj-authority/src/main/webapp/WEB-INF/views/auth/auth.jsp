@@ -49,18 +49,25 @@
 							<div class="form-group">
 								<label class="col-sm-1 control-label"><span class="red">*</span>名称:</label>
 								<div class="col-sm-3">
-									<input type="text" class="form-control" name="authName">
+									<input type="text" class="form-control" name="name">
+								</div>
+								<label class="col-sm-1 control-label">菜单url:</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="url">
 								</div>
 								<label class="col-sm-1 control-label">授权标识:</label>
 								<div class="col-sm-3">
-									<input type="text" class="form-control" name="authSign">
+									<input type="text" class="form-control" name="perms">
 								</div>
+							</div>
+							<div class="form-group">
 								<label class="col-sm-1 control-label">排序:</label>
 								<div class="col-sm-3">
 									<input type="text" class="form-control" name="orderNum">
-								</div>								
+								</div>
 							</div>
-							<input type="hidden" name="authId" /> <input type="hidden" name="menu.menuId">
+
+							<input type="hidden" name="menuId" /> <input type="hidden" name="parentId" /> <input type="hidden" name="type" />
 						</form>
 					</div>
 				</div>
@@ -90,7 +97,7 @@
         var model = {
             id : "myModal",
             formId : "saveForm",
-            entityId : "authId",
+            entityId : "menuId",
             createTitle : "新增权限",
             editTitle : "编辑权限",
             editURL : "${ctx}/auth",
@@ -101,61 +108,56 @@
         //是否有树
         }
 
-        function setting(url) {
-            var setting = {
-                async : {
+        var setting = {
+            data : {
+                simpleData : {
                     enable : true,
-                    type : "get",
-                    //表示异步加载采用 post 方法请求
-                    url : url,
-                    autoParam : [ "id", "type" ]
-                //传递节点的id 和 type值给后台(当异步加载数据时)
+                    idKey : "menuId",
+                    pIdKey : "parentId",
+                    rootPId : 0
                 },
-
-                callback : {
-                    //                         onAsyncSuccess: zTreeOnAsyncSuccess,
-                    onClick : zTreeOnClick
-                //单击节点事件
+                key : {
+                    url : "xUrl"
                 }
-            };
-
-            return setting;
-        }
-
-        function zTreeOnClick(event, treeId, treeNode, clickFlag) {
-            
-            if (treeNode.id == 0) {
-                $('#search_menuId').val(null);
-            } else {
-                $('#search_menuId').val(treeNode.id);
+            },
+            callback : {
+                onClick : zTreeOnClick
             }
+        };
 
-            $('#demo-table').bootstrapTable('refresh'); //刷新表格
-        }
+        var ztree;
 
-        function creatBefore(model){
+        function creatBefore(model) {
             var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
             var treeNodes = treeObj.getSelectedNodes();
-            if(treeNodes[0].isParent == false){
-	            creat(model);
-            }else{
+            if (treeNodes[0].isParent == false) {
+                creat(model);
+            } else {
                 alert('请选择需要授权的菜单');
                 return false;
             }
         }
-        
-        function myCreate(model){
-            $('#'+model.formId + " input[name='menu.menuId']").val($('#search_menuId').val());
+
+        function zTreeOnClick(event, treeId, treeNode, clickFlag) {
+            $('#search_menuId').val(treeNode.menuId);
+
+            //刷新表格
+            $('#demo-table').bootstrapTable('refresh');
         }
-        
-        function myEdit(obj,model){
-            $('#'+model.formId + " input[name='menu.menuId']").val(obj.menu.menuId);
+
+        function myCreate(model) {
+            $('#' + model.formId + " input[name='parentId']").val($('#search_menuId').val());
         }
-        
+
+        function myEdit(obj, model) {}
+
         $(function() {
+            //加载列表
             initTable();
-            var treeUrl = $("#treeDemo").attr("url");
-            $.fn.zTree.init($("#treeDemo"), setting(treeUrl));
+
+            //加载树
+            var jsonTree = getDataStore($("#treeDemo").attr("url"));
+            ztree = $.fn.zTree.init($("#treeDemo"), setting, jsonTree);
         });
 
         function doQuery(params) {
@@ -196,12 +198,12 @@
                     field : 'state',
                     checkbox : true
                 }, {
-                    field : 'authName',
+                    field : 'name',
                     title : '权限名称',
                     sortable : true,
                     halign : 'center'
                 }, {
-                    field : 'authSign',
+                    field : 'perms',
                     title : '授权标识',
                     sortable : true,
                     halign : 'center'
@@ -238,7 +240,7 @@
 
         function queryParams(params) {
             var param = {
-                menuId : $('#search_menuId').val(),
+                parentId : $('#search_menuId').val(),
                 limit : this.limit, // 页面大小
                 offset : this.offset, // 页码
                 pageindex : this.pageNumber,

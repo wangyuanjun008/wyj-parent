@@ -12,6 +12,7 @@
 <link href="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.css" rel="stylesheet" />
 <link href="${bathPath}/css/public.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/select2-4.0.3/dist/css/select2.min.css" rel="stylesheet" />
+<link href="${bathPath}/plugins/ztree.3.5.26/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
 
 <style>
 .select2-container--open {
@@ -25,6 +26,7 @@
 			<button type="button" class="btn btn-primary" data-toggle="modal" onclick='creat(model);'>新增角色</button>
 			<button type="button" class="btn btn-primary" data-toggle="modal" onclick="edit(model);">编辑角色</button>
 			<button type="button" class="btn btn-primary" onclick="remove(model);">删除角色</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal" onclick="operate(model);">操作权限</button>
 		</div>
 		<table id="table"></table>
 	</div>
@@ -73,6 +75,25 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLable" aria-hidden="true">
+		<div class="modal-dialog  modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+					<h4 class="modal-title" id="myModalLabel">操作权限</h4>
+				</div>
+				<div class="modal-body">
+					<div class="col-lg-12" style="height: 300px; overflow: scroll;">
+						<ul id="treeDemo" class="ztree" url="${ctx}/auth/renderTree"></ul>
+					</div>
+				</div>
+				<div class="modal-footer" style="border: none; margin-left: 40%; padding-bottom: 20px;">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="allocationAuth(model);">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<script src="${bathPath}/plugins/jquery-3.2.1/jquery-3.2.1.min.js"></script>
 	<script src="${bathPath}/plugins/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -81,6 +102,12 @@
 	<script src="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.js"></script>
 	<script src="${bathPath}/plugins/select2-4.0.3/dist/js/select2.min.js"></script>
 	<script src="${bathPath}/plugins/select2-4.0.3/dist/js/i18n/zh-CN.js"></script>
+	<script src="${bathPath}/plugins/ztree.3.5.26/js/jquery.ztree.all.js"></script>
+	<script src="${bathPath}/plugins/ztree.3.5.26/js/jquery.ztree.all.js"></script>
+	<script src="${bathPath}/plugins/ztree.3.5.26/js/jquery.ztree.core.min.js"></script>
+	<script src="${bathPath}/plugins/ztree.3.5.26/js/jquery.ztree.excheck.min.js"></script>
+	<script src="${bathPath}/plugins/ztree.3.5.26/js/jquery.ztree.exedit.min.js"></script>
+	<script src="${bathPath}/plugins/ztree.3.5.26/js/jquery.ztree.exhide.min.js"></script>
 	<script src="${bathPath}/js/base.js"></script>
 
 
@@ -96,14 +123,127 @@
             removeURL : "${ctx}/role/remove"
         }
 
-        function myCreate(model) {
-
+        var model1 = {
+            id : "myModal1",
+            formId : "saveForm",
+            entityId : "roleId",
+            authorizeURL : '${ctx}/role/authorize' 
+//             createTitle : "新增角色",
+//             editTitle : "编辑角色",
+//             editURL : "${ctx}/role",
+//             saveURL : "${ctx}/role/add",
+//             removeURL : "${ctx}/role/remove"
         }
+        var ztree;
+
+        var setting = {
+            data : {
+                simpleData : {
+                    enable : true,
+                    idKey : "menuId",
+                    pIdKey : "parentId",
+                    rootPId : 0
+                },
+                key : {
+                    url : "xUrl"
+                }
+            },
+            check : {
+                enable : true,
+                chkStyle : "checkbox",
+                chkboxType : {
+                    "Y" : "ps",
+                    "N" : "ps"
+                }
+            }
+        };
 
         $(function() {
+            //加载列表
             initTable();
+
+            //加载树
+            var jsonTree = getDataStore($("#treeDemo").attr("url"));
+            ztree = $.fn.zTree.init($("#treeDemo"), setting, jsonTree);
         });
 
+        function myCreate(model) {}
+
+        function myEdit(obj, model) {}
+
+        //点击分配权限
+        function operate() {
+            ztree.checkAllNodes(false);//全部节点取消勾选
+            ztree.expandAll(true);
+            var selectRow = $("#demo-table").bootstrapTable('getSelections');
+            if (selectRow.length != 1) {
+                alert('请选择并只能选择一条数据！');
+                return false;
+            }
+            var selectRowData = selectRow[0];
+            var id = selectRowData[model.entityId];
+            var jsonMenus = getDataStore('${ctx}/role/' + id + '?time=' + new Date().getTime());
+            //勾选角色所拥有的菜单
+            var menuIds = jsonMenus.data.obj.menus;
+            for (var i = 0; i < menuIds.length; i++) {
+                var node = ztree.getNodeByParam("menuId", menuIds[i]);
+                ztree.checkNode(node, true, false);
+            }
+            $('#' + model1.id).modal('show');
+        }
+        //保存分配权限
+        function allocationAuth() {
+            var selectRow = $("#demo-table").bootstrapTable('getSelections');
+            var selectRowData = selectRow[0];
+            var id = selectRowData[model.entityId];
+            
+            var nodes = ztree.getCheckedNodes(true);
+            if(nodes.length == 0){
+                return;
+            }
+            var menuList = new Array();
+            for (var i = 0; i < nodes.length; i++) {
+                menuList.push(nodes[i].menuId);
+            }
+            
+            
+            $.confirm({
+                title : '提示！',
+                content : '确定保存吗?',
+                buttons : {
+                    ok : {
+                        text : "确定",
+                        btnClass : 'btn-primary',
+                        keys : [ 'enter' ],
+                        action : function() {
+                            $.ajax({
+                                type : 'post',
+                                url : model1.authorizeURL,
+                                data : {
+                					'menus' : menuList,
+                					'roleId' : id
+                                },
+                                traditional: true,
+                                dataType : 'json',
+                                success : function(result) {
+                                }
+                            })
+                        }
+                    },
+                    cancel : {
+                        text : "取消",
+                        btnClass : 'btn-primary',
+                        keys : [ 'esc' ],
+                        action : function() {
+                        }
+
+                    }
+                }
+            });            
+            
+
+
+        }
         function doQuery(params) {
             $('#demo-table').bootstrapTable('refresh'); //刷新表格
         }

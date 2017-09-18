@@ -71,7 +71,7 @@ public class RoleController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Retval edit(@PathVariable String id) {
         Retval retval = Retval.newInstance();
-        Role Role = roleService.getObjectById(Long.valueOf(id));
+        Role Role = roleService.getRoleById(Long.valueOf(id));
         retval.put("obj", Role);
         return retval;
     }
@@ -103,5 +103,18 @@ public class RoleController {
             dataDtos.add(dataDto);
         }
         return JSON.toJSONString(dataDtos);
+    }
+    
+    @ResponseBody
+    @RequestMapping("/authorize")
+    public int updateRoleAuthorization(@RequestParam Long[] menus,@RequestParam Long roleId) {
+        List<Long> menuIds = new ArrayList<>();
+        for (int i = 0; i < menus.length; i++) {
+            menuIds.add(menus[i]);
+        }
+        Role role = new Role();
+        role.setMenus(menuIds);
+        role.setRoleId(roleId);
+        return roleService.updateRoleAuthorization(role);
     }
 }

@@ -148,13 +148,10 @@ function remove(model) {
 
 /** 重新加载树 */
 function reloadTree() {
-    var tree = $("#treeDemo");
-    var treeUrl = tree.attr("url");
-
-    if (treeUrl != null) {
-        $.fn.zTree.destroy("treeDemo");
-        $.fn.zTree.init(tree, setting(treeUrl));
-    }
+    //加载树
+    var jsonTree = getDataStore($("#treeDemo").attr("url"));
+    $.fn.zTree.destroy("treeDemo");
+    $.fn.zTree.init($("#treeDemo"), setting,jsonTree);
 }
 
 
