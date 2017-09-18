@@ -8,10 +8,10 @@
 	</select>
 	<insert id="save" parameterType="com.wyj.entity.system.Menu">
 		INSERT INTO
-		s_auth_menu(parentId,name,url,perms,orderNum,
+		s_auth_menu(parentId,name,url,perms,type,orderNum,
 		isUse,createTime,createUserId)
 		VALUES
-		(#{parentId},#{name},#{url},#{perms},#{orderNum},#{isUse},#{createTime,jdbcType=DATE},#{createUserId})
+		(#{parentId},#{name},#{url},#{perms},#{type},#{orderNum},#{isUse},#{createTime,jdbcType=DATE},#{createUserId})
 	</insert>
 	<delete id="remove" parameterType="java.lang.Long">
 		DELETE FROM
@@ -32,35 +32,49 @@
 		UPDATE s_auth_menu
 		SET
 		parentId =
-		#{parentId},name=#{name},url=#{url},perms=#{perms},orderNum=#{orderNum},isUse=#{isUse},modifyTime=#{modifyTime,jdbcType=DATE},modifyUserId=#{modifyUserId}
+		#{parentId},name=#{name},url=#{url},perms=#{perms},type=#{type},orderNum=#{orderNum},isUse=#{isUse},modifyTime=#{modifyTime,jdbcType=DATE},modifyUserId=#{modifyUserId}
 		WHERE menuId=#{menuId}
 	</update>
-	<select id="list" resultMap="menuList" parameterType="com.wyj.entity.system.Menu">
-		SELECT * FROM s_auth_menu
+	
+	<select id="list" resultType="com.wyj.entity.system.Menu" parameterType="com.wyj.entity.system.Menu"> 
+		SELECT 
+		t1.menuId,
+		t1.parentId,
+		(SELECT t2.name FROM s_auth_menu t2 WHERE t2.menuId=t1.parentId) AS parentName,
+		t1.name,
+		t1.url,
+		t1.perms,
+		t1.type,
+		t1.orderNum,
+		t1.isUse,
+		t1.createTime,
+		t1.createUserId,
+		t1.modifyTime,
+		t1.modifyUserId
+		FROM s_auth_menu t1
 		<trim prefix="WHERE" prefixOverrides="AND | OR">
 			<if test="parentId != null">
-				AND parentId = #{parentId}
+				AND t1.parentId = #{parentId}
 			</if>
-		</trim>
-		ORDER BY orderNum ASC
-	</select>
-	<select id="listOneNodeMenus" resultMap="menuList" parameterType="com.wyj.entity.system.Menu">
-		SELECT * FROM s_auth_menu WHERE ISNULL(parentId) ORDER BY orderNum ASC
-	</select>
-
+			<if test="type != null">
+				AND t1.type = #{type}
+			</if>
+		</trim>		
+		ORDER BY t1.orderNum ASC
+	</select>	
+	
 	<resultMap type="com.wyj.entity.system.Menu" id="menuList">
 		<id property="menuId" column="menuId" />
 		<result property="parentId" column="parentId" />
 		<result property="name" column="name" />
 		<result property="url" column="url" />
 		<result property="perms" column="perms" />
+		<result property="type" column="type" />
 		<result property="orderNum" column="orderNum" />
 		<result property="isUse" column="is_use" />
-		<result property="createTime" jdbcType="DATE" javaType="java.util.Date"
-			column="createTime" />
+		<result property="createTime" jdbcType="DATE" javaType="java.util.Date" column="createTime" />
 		<result property="createUserId" column="createUserId" />
-		<result property="modifyTime" jdbcType="DATE" javaType="java.util.Date"
-			column="modifyTime" />
+		<result property="modifyTime" jdbcType="DATE" javaType="java.util.Date" column="modifyTime" />
 		<result property="modifyUserId" column="modifyUserId" />
 	</resultMap>
 

@@ -1,7 +1,6 @@
 package com.wyj.entity.system;
 
 import java.util.Date;
-import java.util.List;
 
 import com.wyj.entity.BaseEntity;
 
@@ -16,7 +15,9 @@ public class Menu extends BaseEntity {
 
     private Long menuId; // 菜单id
 
-    private Long parentId; // 父级id
+    private Long parentId; // 父级id一级菜单为0
+
+    private String parentName;// 父级菜单名称
 
     private String name;// 菜单名称
 
@@ -24,7 +25,7 @@ public class Menu extends BaseEntity {
 
     private String perms;// 授权标识(多个用逗号分隔，如：user:list,user:create)
 
-    // private Integer type;// 类型(0：目录 1：菜单 2：按钮)
+    private Integer type;// 类型(0：目录1：菜单 2：按钮)
 
     private Integer orderNum;// 排序
 
@@ -38,10 +39,6 @@ public class Menu extends BaseEntity {
 
     private Long modifyUserId;
 
-    private List<?> menuDtls;
-
-    private List<Auth> auths;
-    
     public Long getMenuId() {
         return menuId;
     }
@@ -138,20 +135,20 @@ public class Menu extends BaseEntity {
         this.isUse = isUse;
     }
 
-    public List<?> getMenuDtls() {
-        return menuDtls;
+    public Integer getType() {
+        return type;
     }
 
-    public void setMenuDtls(List<?> menuDtls) {
-        this.menuDtls = menuDtls;
+    public void setType(Integer type) {
+        this.type = type;
     }
 
-    public List<Auth> getAuths() {
-        return auths;
+    public String getParentName() {
+        return parentName;
     }
 
-    public void setAuths(List<Auth> auths) {
-        this.auths = auths;
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
     }
 
 }
