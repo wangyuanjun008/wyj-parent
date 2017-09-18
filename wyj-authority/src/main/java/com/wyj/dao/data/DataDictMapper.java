@@ -15,5 +15,5 @@ import com.wyj.entity.data.DataDict;
  */
 public interface DataDictMapper extends BaseMapper<DataDict, Long> {
 
-    public List<Map<Long, String>> getDataDictByGroupCode(String groupCode);
+    List<Map<Long, String>> getDataDictByGroupCode(String groupCode);
 }

@@ -1,7 +1,5 @@
 package com.wyj.dao.system;
 
-import java.util.List;
-
 import com.wyj.dao.BaseMapper;
 import com.wyj.entity.system.Menu;
 
@@ -14,5 +12,4 @@ import com.wyj.entity.system.Menu;
  */
 public interface MenuMapper extends BaseMapper<Menu, Long> {
 
-    public List<Menu> listOneNodeMenus();
 }
