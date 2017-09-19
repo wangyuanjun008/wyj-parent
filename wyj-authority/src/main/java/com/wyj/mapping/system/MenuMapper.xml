@@ -6,6 +6,16 @@
 		resultMap="menuList">
 		SELECT * FROM s_auth_menu t WHERE t.menuId=#{value}
 	</select>
+	
+	<select id="countMenuChildren" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			s_auth_menu
+		WHERE
+			parentId = #{value}
+	</select>	
+	
 	<insert id="save" parameterType="com.wyj.entity.system.Menu">
 		INSERT INTO
 		s_auth_menu(parentId,name,url,perms,type,orderNum,
