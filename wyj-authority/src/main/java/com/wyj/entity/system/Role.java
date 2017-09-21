@@ -20,7 +20,7 @@ public class Role extends BaseEntity {
 
     private String roleName;// 角色名称
 
-    private String roleType;// 角色类型
+    private String roleSign;// 角色类型
 
     private String remake;// 描述
 
@@ -91,10 +91,6 @@ public class Role extends BaseEntity {
         this.modifyUserId = modifyUserId;
     }
 
-    public String getRoleType() {
-        return roleType;
-    }
-
     public List<Long> getMenus() {
         return menus;
     }
@@ -103,8 +99,12 @@ public class Role extends BaseEntity {
         this.menus = menus;
     }
 
-    public void setRoleType(String roleType) {
-        this.roleType = roleType;
+    public String getRoleSign() {
+        return roleSign;
+    }
+
+    public void setRoleSign(String roleSign) {
+        this.roleSign = roleSign;
     }
 
 }

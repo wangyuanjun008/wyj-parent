@@ -1,5 +1,7 @@
 package com.wyj.service.system;
 
+import java.util.Set;
+
 import com.wyj.entity.system.Role;
 import com.wyj.service.BaseService;
 
@@ -17,4 +19,6 @@ public interface RoleService extends BaseService<Role, Long> {
     Role getRoleById(Long roleId);
 
     int updateRoleAuthorization(Role role);
+    
+    Set<String> listRoleSignByUserId(Long userId);
 }

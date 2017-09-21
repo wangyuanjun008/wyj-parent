@@ -1,8 +1,12 @@
 package com.wyj.service.system.impl;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +70,18 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, Long> implements Role
             count = roleRelMenuService.save(hashMap);
         }
         return count;
+    }
+
+    @Override
+    public Set<String> listRoleSignByUserId(Long userId) {
+        List<String> roles = roleMapper.listRoleSignByUserId(userId);
+        Set<String> rolesSet = new HashSet<String>();
+        for(String role : roles) {
+            if(StringUtils.isNotBlank(role)) {
+                rolesSet.addAll(Arrays.asList(role.trim().split(",")));
+            }
+        }
+        return rolesSet;
     }
 
 //    @Override

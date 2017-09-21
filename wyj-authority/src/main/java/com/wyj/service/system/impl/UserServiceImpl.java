@@ -1,7 +1,6 @@
 package com.wyj.service.system.impl;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wyj.dao.BaseMapper;
 import com.wyj.dao.system.UserMapper;
 import com.wyj.entity.system.User;
-import com.wyj.entity.system.UserRelRole;
 import com.wyj.service.impl.BaseServiceImpl;
 import com.wyj.service.system.UserRelRoleService;
 import com.wyj.service.system.UserService;
@@ -64,6 +62,11 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
         User user = userMapper.getObjectById(userId);
         user.setRoles(userRelRoleService.listRoleIdByUserId(userId));
         return user;
+    }
+
+    @Override
+    public User getUserByUserName(String userName) {
+        return userMapper.getUserByUserName(userName);
     }
 
 }

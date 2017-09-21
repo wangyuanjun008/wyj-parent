@@ -18,9 +18,9 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wyj.entity.DataDto;
+import com.wyj.entity.Retval;
 import com.wyj.entity.system.Role;
 import com.wyj.service.system.RoleService;
-import com.wyj.utils.Retval;
 
 /**
  * 角色Controller

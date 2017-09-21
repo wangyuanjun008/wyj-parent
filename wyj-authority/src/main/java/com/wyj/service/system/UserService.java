@@ -12,4 +12,6 @@ public interface UserService extends BaseService<User, Long> {
     int batchRemoveUser(Long[] userIds);
 
     User getUserById(Long userId);
+    
+    User getUserByUserName(String userName);
 }

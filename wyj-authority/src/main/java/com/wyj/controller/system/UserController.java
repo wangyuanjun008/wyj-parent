@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wyj.entity.Retval;
 import com.wyj.entity.system.User;
 import com.wyj.service.system.UserService;
-import com.wyj.utils.Retval;
 
 /**
  * 

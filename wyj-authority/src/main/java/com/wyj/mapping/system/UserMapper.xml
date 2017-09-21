@@ -7,6 +7,14 @@
 		SELECT * FROM s_auth_user WHERE
 		userId=#{value}
 	</select>
+	<select id="getUserByUserName" parameterType="java.lang.String" resultType="com.wyj.entity.system.User">
+		SELECT *
+		FROM
+			s_auth_user
+		WHERE
+			userName = #{value}
+	</select>	
+	
 	<insert id="save" parameterType="com.wyj.entity.system.User" useGeneratedKeys="true" keyProperty="userId">
 		INSERT INTO
 		s_auth_user(userName,password,name,sex,phone,email,address)
