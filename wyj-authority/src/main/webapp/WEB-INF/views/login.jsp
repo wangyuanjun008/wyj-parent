@@ -8,7 +8,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>登录页</title>
 
-	<link href="${bathPath}/plugins/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+	<link href="${bathPath}/plugins/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" />
 	<link href="${bathPath}/plugins/material-design-iconic-font-2.2.0/css/material-design-iconic-font.min.css" rel="stylesheet"/>
 	<link href="${bathPath}/plugins/waves-0.7.5/waves.min.css" rel="stylesheet"/>
 	<link href="${bathPath}/plugins/checkbix/css/checkbix.min.css" rel="stylesheet"/>
@@ -19,7 +19,7 @@
 	<div class="input-group m-b-20">
 		<span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
 		<div class="fg-line">
-			<input id="username" type="text" class="form-control" name="username" placeholder="帐号" required autofocus value="admin">
+			<input id="userName" type="text" class="form-control" name="userName" placeholder="帐号" required autofocus value="admin">
 		</div>
 	</div>
 	<div class="input-group m-b-20">
@@ -36,7 +36,7 @@
 	<a id="login-bt" href="javascript:;" class="waves-effect waves-button waves-float"><i class="zmdi zmdi-arrow-forward"></i></a>
 </div>
 <script src="${bathPath}/plugins/jquery-3.2.1/jquery-3.2.1.min.js"></script>
-<script src="${bathPath}/plugins/bootstrap-3.3.0/js/bootstrap.min.js"></script>
+<script src="${bathPath}/plugins/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 <script src="${bathPath}/plugins/waves-0.7.5/waves.min.js"></script>
 <script src="${bathPath}/plugins/checkbix/js/checkbix.min.js"></script>
 
@@ -61,7 +61,7 @@
 			login();
 		});
 		// 回车事件
-		$('#username, #password').keypress(function (event) {
+		$('#userName, #password').keypress(function (event) {
 			if (13 == event.keyCode) {
 				login();
 			}
@@ -73,27 +73,22 @@
 			url: '${ctx}/login',
 			type: 'POST',
 			data: {
-				username: $('#username').val(),
+				userName: $('#userName').val(),
 				password: $('#password').val()//,
-				//rememberMe: $('#rememberMe').is(':checked')
-//				backurl: BACK_URL
 			},
-//			beforeSend: function() {
-	//
-//			},
+			dataType: "json",
 			success: function(result){
 			    console.log(result);
-//				if (json.code == 1) {
-//					location.href = json.data;
-//				} else {
-//					alert(json.data);
-//					if (10101 == json.code) {
-//						$('#username').focus();
-//					}
-//					if (10102 == json.code) {
-//						$('#password').focus();
-//					}
-//				}
+				if (result.success == true) {
+					window.location.href = '${ctx}/public';
+				} else {
+// 					if (10101 == json.code) {
+// 						$('#userName').focus();
+// 					}
+// 					if (10102 == json.code) {
+// 						$('#password').focus();
+// 					}
+				}
 			},
 			error: function(error){
 				console.log(error);

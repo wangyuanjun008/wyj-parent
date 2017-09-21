@@ -27,6 +27,7 @@
 		<!-- 分页插件 -->
 		<pagehelper.version>5.0.4</pagehelper.version>
 		<jackson.version>2.4.0</jackson.version>
+		<shiro.version>1.3.2</shiro.version>
 	</properties>
 	<dependencies>
 
@@ -203,6 +204,34 @@
 			<version>${jackson.version}</version>
 		</dependency>
 		<!-- JSON end -->
+		
+		<!-- SECURITY begin -->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-core</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-spring</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-web</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-ehcache</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-cas</artifactId>
+            <version>${shiro.version}</version>
+        </dependency>
+		<!-- SECURITY end -->		
 	</dependencies>
 	<build>
 		<plugins>
