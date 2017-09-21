@@ -73,6 +73,56 @@
 		ORDER BY t1.orderNum ASC
 	</select>	
 	
+	<select id="listNotButton" resultType="com.wyj.entity.system.Menu" parameterType="com.wyj.entity.system.Menu">
+		SELECT 
+		t1.menuId,
+		t1.parentId,
+		(SELECT t2.name FROM s_auth_menu t2 WHERE t2.menuId=t1.parentId) AS parentName,
+		t1.name,
+		t1.url,
+		t1.perms,
+		t1.type,
+		t1.orderNum,
+		t1.isUse,
+		t1.createTime,
+		t1.createUserId,
+		t1.modifyTime,
+		t1.modifyUserId
+		FROM s_auth_menu t1
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="parentId != null">
+				AND t1.parentId = #{parentId}
+			</if>
+			AND t1.type != 2
+		</trim>			
+			
+		ORDER BY
+			t1.orderNum ASC
+	</select>
+	
+	<select id="listMenuPermsByUserId" parameterType="long" resultType="string">
+		SELECT DISTINCT
+			m.perms
+		FROM
+			s_auth_user t1
+		LEFT JOIN s_auth_rolerelmenu t2 ON t1.role_id = t2.role_id
+		LEFT JOIN s_auth_menu t3 ON t2.menu_id = t3.menu_id
+		WHERE
+			t1.userId = #{value}
+		ORDER BY
+			m.orderNum ASC
+	</select>
+		
+	<select id="listAllMenuIdByUserId" resultType="long">
+		SELECT DISTINCT
+			t2.menuId
+		FROM
+			s_auth_userrelrole t1
+		LEFT JOIN s_auth_rolerelmenu t2 ON t1.roleId = t2.roleId
+		WHERE
+			t1.userId = #{value}
+	</select>		
+		
 	<resultMap type="com.wyj.entity.system.Menu" id="menuList">
 		<id property="menuId" column="menuId" />
 		<result property="parentId" column="parentId" />

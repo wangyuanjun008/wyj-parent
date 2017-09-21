@@ -1,6 +1,7 @@
 package com.wyj.entity.system;
 
 import java.util.Date;
+import java.util.List;
 
 import com.wyj.entity.BaseEntity;
 
@@ -38,6 +39,8 @@ public class Menu extends BaseEntity {
     private Date modifyTime;
 
     private Long modifyUserId;
+
+    private List<?> list;
 
     public Long getMenuId() {
         return menuId;
@@ -149,6 +152,14 @@ public class Menu extends BaseEntity {
 
     public void setParentName(String parentName) {
         this.parentName = parentName;
+    }
+
+    public List<?> getList() {
+        return list;
+    }
+
+    public void setList(List<?> list) {
+        this.list = list;
     }
 
 }

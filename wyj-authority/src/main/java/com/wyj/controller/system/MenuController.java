@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wyj.entity.Retval;
 import com.wyj.entity.system.Menu;
 import com.wyj.service.system.MenuService;
-import com.wyj.utils.Retval;
 
 /**
  * 
@@ -43,11 +43,13 @@ public class MenuController {
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public String query(@RequestParam(value = "offset", required = true, defaultValue = "1") Integer page, @RequestParam(value = "limit", required = false, defaultValue = "10") Integer pageSize, Long parentId) {
         PageHelper.startPage(page, pageSize);
+        if(parentId == null){
+            return null;
+        }
         List<Menu> menus = null;
         Menu menu = new Menu();
         menu.setParentId(parentId);
-        menu.setType(1); //筛选菜单
-        menus = menuService.list(menu);
+        menus = menuService.listNotButton(menu);
         PageInfo<Menu> pageInfo = new PageInfo<Menu>(menus);
         return JSON.toJSONString(pageInfo.getList());
     }
@@ -58,7 +60,6 @@ public class MenuController {
         Retval retval = Retval.newInstance();
         try {
             if (menu.getMenuId() == null) {
-                menu.setType(1); //菜单标识
                 menuService.save(menu);
             } else {
                 menuService.update(menu);
@@ -83,7 +84,7 @@ public class MenuController {
     public Retval remove(@RequestParam Long[] ids) {
         Retval retval = Retval.newInstance();
         try {
-            menuService.batchRemove(ids);
+            retval = menuService.batchRemoveMenu(ids);
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -95,9 +96,8 @@ public class MenuController {
     @ResponseBody
     @RequestMapping(value = "/renderTree", method = RequestMethod.GET)
     public List<Menu> renderTree() {
-        Menu menu = new Menu();
-        menu.setType(1);
-        return menuService.list(menu);
+        return menuService.listNotButton(null);
     }
 
+    
 }
