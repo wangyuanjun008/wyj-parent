@@ -130,7 +130,7 @@
         function creatBefore(model) {
             var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
             var treeNodes = treeObj.getSelectedNodes();
-            if (treeNodes[0].isParent == false) {
+            if (!!treeNodes[0] && treeNodes[0].isParent == false) {
                 creat(model);
             } else {
                 alert('请选择需要授权的菜单');

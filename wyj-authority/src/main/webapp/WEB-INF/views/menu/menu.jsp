@@ -55,12 +55,14 @@
 								<div class="col-sm-3">
 									<input type="text" class="form-control" name="url">
 								</div>
+								<label class="col-sm-1 control-label">类型:</label> <select id="type" name="type" class="col-sm-1 form-control select2">
+								</select>								
+							</div>
+							<div class="form-group">
 								<label class="col-sm-1 control-label">授权标识:</label>
 								<div class="col-sm-3">
 									<input type="text" class="form-control" name="perms">
-								</div>
-							</div>
-							<div class="form-group">
+								</div>							
 								<label class="col-sm-1 control-label">排序:</label>
 								<div class="col-sm-3">
 									<input type="text" class="form-control" name="orderNum">
@@ -68,7 +70,7 @@
 								<label class="col-sm-1 control-label">是否使用:</label> <select id="isUse" name="isUse" class="col-sm-1 form-control select2">
 								</select>
 							</div>
-							<input type="hidden" name="menuId" /> <input type="hidden" name="parentId" /> <input type="hidden" name="type" />
+							<input type="hidden" name="menuId" /> <input type="hidden" name="parentId" />
 						</form>
 					</div>
 				</div>
@@ -110,6 +112,7 @@
         }
 
         var isUseStore = getDataStore(model.dataURL + 'yesOrNo');
+        var menuTypeStore = getDataStore(model.dataURL + 'menuType');
 
         var setting = {
             data : {
@@ -159,6 +162,15 @@
                 width : 150,
                 minimumResultsForSearch : -1,
                 data : isUseStore
+            });
+            
+            $("#type").select2({
+                placeholder : "--请选择--",
+                dropdownParent : $("#myModal"),
+                allowClear : true,
+                width : 150,
+                minimumResultsForSearch : -1,
+                data : menuTypeStore
             });
         });
 

@@ -52,9 +52,9 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-4 control-label"><span class="red">*</span>角色类型:</label>
+							<label class="col-sm-4 control-label"><span class="red">*</span>角色标识:</label>
 							<div class="col-sm-7">
-								<input type="text" class="form-control" name="roleType">
+								<input type="text" class="form-control" name="roleSign">
 							</div>
 						</div>
 						<div class="form-group">
@@ -287,7 +287,7 @@
                     sortable : true,
                     halign : 'center'
                 }, {
-                    field : 'roleType',
+                    field : 'roleSign',
                     title : '角色标识',
                     sortable : true,
                     halign : 'center'
