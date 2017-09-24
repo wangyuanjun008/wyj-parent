@@ -256,3 +256,56 @@ function fullPage() {
 		alert("当前浏览器不支持全屏 API，请更换至最新的 Chrome/Firefox/Safari 浏览器或通过 F11 快捷键进行操作。");
 	}
 }
+
+function personInfo(){
+    $('#myModal').modal('show');
+}
+
+function updatePassword(url){
+    var oldPassword = $("#saveForm input[name='oldPassword']").val();
+    var newPassword = $("#saveForm input[name='newPassword']").val();
+    var repeatNewPassword = $("#saveForm input[name='repeatNewPassword']").val();
+    if(newPassword != repeatNewPassword){
+        alert('新密码输入不正确,请重新输入!');
+        return;
+    }
+    $.confirm({
+        title : '提示！',
+        content : '确定修改密码吗?',
+        buttons : {
+            ok : {
+                text : "确定",
+                btnClass : 'btn-primary',
+                keys : [ 'enter' ],
+                action : function() {
+                    $.ajax({
+                        type : 'post',
+                        url : url,
+                        data : {
+                            oldPassword : oldPassword,
+                            newPassword : newPassword
+                        },
+                        traditional: true,
+                        dataType : 'json',
+                        success : function(result) {
+                            if (result.success) {
+                                $('#myModal').modal('hide');
+                            }else{
+                                alert(result.errorMsg);
+                            }
+                        }
+                    });
+
+                }
+            },
+            cancel : {
+                text : "取消",
+                btnClass : 'btn-primary',
+                keys : [ 'esc' ],
+                action : function() {
+                }
+            }
+        }
+    });
+    
+}

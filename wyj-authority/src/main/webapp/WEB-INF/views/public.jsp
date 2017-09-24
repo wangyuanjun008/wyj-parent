@@ -13,6 +13,7 @@
 <link href="${bathPath}/plugins/waves-0.7.5/waves.min.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
 <link href="${bathPath}/css/admin.css" rel="stylesheet" />
+<link href="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.css" rel="stylesheet" />
 <style>
 /** skins **/
 #wyj_auth_server #header {
@@ -88,8 +89,7 @@
 						<ul class="dropdown-menu dm-icon pull-right">
 							<li class="hidden-xs"><a class="waves-effect" data-ma-action="fullscreen" href="javascript:fullPage();"><i class="zmdi zmdi-fullscreen"></i> 全屏模式</a></li>
 							<li><a class="waves-effect" data-ma-action="clear-localstorage" href="javascript:;"><i class="zmdi zmdi-delete"></i> 清除缓存</a></li>
-							<li><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-face"></i> 隐私管理</a></li>
-							<li><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-settings"></i> 系统设置</a></li>
+							<li><a class="waves-effect" data-toggle="modal" onclick="personInfo();"><i class="zmdi zmdi-account"></i> 修改密码</a></li>
 							<li><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-run"></i> 退出登录</a></li>
 						</ul></li>
 				</ul>
@@ -109,17 +109,11 @@
 						小汪汪，您好！ <i class="zmdi zmdi-caret-down"></i>
 					</div>
 				</a>
-				<ul class="main-menu">
-					<li><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-account"></i> 个人资料</a></li>
-					<li><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-face"></i> 隐私管理</a></li>
-					<li><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-settings"></i> 系统设置</a></li>
-					<li><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-run"></i> 退出登录</a></li>
-				</ul>
 			</div>
 			<!-- /个人资料区 -->
 			<!-- 菜单区 -->
 			<ul class="main-menu"">
-				<li><a class="waves-effect" href="javascript:Tab.addTab('首页', 'home');"><i class="zmdi zmdi-home"></i> 首页</a></li>
+<!-- 				<li><a class="waves-effect" href="javascript:Tab.addTab('首页', 'home');"><i class="zmdi zmdi-home"></i> 首页</a></li> -->
 <!-- 				<li class="sub-menu"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-accounts-list"></i> 系统组织管理</a> -->
 <!-- 					<ul> -->
 <%-- 						<li><a class="waves-effect" href="javascript:Tab.addTab('系统管理', '${ctx}/user/index');">系统管理</a></li> --%>
@@ -211,8 +205,54 @@
 	</section>
 	<footer id="footer"></footer>
 
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLable" aria-hidden="true">
+		<div class="modal-dialog  modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+					<h4 class="modal-title" id="myModalLabel">修改密码</h4>
+				</div>
+				<div class="modal-body">
+					<form method="get" id="saveForm" class="form-horizontal">
+<!-- 						<div class="form-group"> -->
+<!-- 							<label class="col-sm-4 control-label"><span class="red">*</span>帐号:</label> -->
+<!-- 							<div class="col-sm-7"> -->
+<!-- 								<input type="text" class="form-control" name="roleName"> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+						<div class="form-group">
+							<label class="col-sm-4 control-label"><span class="red">*</span>原密码:</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" name="oldPassword">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label"><span class="red">*</span>新密码:</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" name="newPassword">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label"><span class="red">*</span>再输入新密码:</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" name="repeatNewPassword">
+							</div>
+						</div>
+
+						<input type="hidden" name="createTime" /> <input type="hidden" name="createUserId" /> <input type="hidden" name="roleId" />
+					</form>
+				</div>
+				<div class="modal-footer" style="border: none; margin-left: 40%; padding-bottom: 20px;">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="updatePassword('${ctx}/user/updatePassword');">提交</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 	<script src="${bathPath}/plugins/jquery-3.2.1/jquery-3.2.1.min.js"></script>
+	<script src="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.js"></script>
 	<script src="${bathPath}/plugins/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 	<script src="${bathPath}/plugins/waves-0.7.5/waves.min.js"></script>
 	<script src="${bathPath}/plugins/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
@@ -221,11 +261,7 @@
 	<script src="${bathPath}/plugins/fullPage/jquery.fullPage.min.js"></script>
 	<script src="${bathPath}/plugins/fullPage/jquery.jdirk.min.js"></script>
 	<script src="${bathPath}/plugins/jquery.cookie.js"></script>
-	<!-- bootstrap-table -->
 	<script src="${bathPath}/plugins/bootstrap-table-1.11.1/bootstrap-table.min.js"></script>
-	<%-- 	<script src="${bathPath}/plugins/bootstrap-table-1.11.1/locale/bootstrap-table-zh-CN.js"></script> --%>
-	<!-- jquery-confirm -->
-	<%-- 	<script src="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.js"></script> --%>
 	<script src="${bathPath}/js/admin.js"></script>
 </body>
 </html>
