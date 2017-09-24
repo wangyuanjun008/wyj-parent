@@ -19,6 +19,8 @@ public class DataGroup extends BaseEntity {
     private String remark;// 描述
 
     private Integer status;// 使用状态
+    
+    private Long parentId;// 父节点
 
     public Long getGroupId() {
         return groupId;
@@ -58,6 +60,14 @@ public class DataGroup extends BaseEntity {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
 }

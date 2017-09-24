@@ -11,4 +11,5 @@ import com.wyj.service.BaseService;
  */
 public interface DataGroupService extends BaseService<DataGroup, Long>{
 
+    int batchRemoveDataGroup(Long[] ids);
 }

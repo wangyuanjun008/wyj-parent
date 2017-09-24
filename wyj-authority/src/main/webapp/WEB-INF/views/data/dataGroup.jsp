@@ -64,6 +64,7 @@
 							</select>
 						</div>
 						<input type="hidden" name="groupId">
+						<input type="hidden" name="parentId">
 					</form>
 				</div>
 				<div class="modal-footer" style="border: none; margin-left: 40%; padding-bottom: 20px;">
