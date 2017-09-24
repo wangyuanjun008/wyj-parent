@@ -2,12 +2,16 @@ package com.wyj.service.system.impl;
 
 import java.util.HashMap;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wyj.dao.BaseMapper;
+import com.wyj.dao.system.RoleMapper;
 import com.wyj.dao.system.UserMapper;
+import com.wyj.entity.Retval;
 import com.wyj.entity.system.User;
 import com.wyj.service.impl.BaseServiceImpl;
 import com.wyj.service.system.UserRelRoleService;
@@ -19,6 +23,17 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 
     @Autowired
     private UserMapper userMapper;
+    
+    @Autowired
+    private RoleMapper RoleMapper;
+    
+    
+    @PostConstruct
+    public void init() {
+        System.out.println(RoleMapper +"====================");
+        System.out.println(userMapper + "===========================");
+    }
+    
 
     @Override
     public BaseMapper<User, Long> getMapper() {
@@ -67,6 +82,16 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
     @Override
     public User getUserByUserName(String userName) {
         return userMapper.getUserByUserName(userName);
+    }
+
+    @Override
+    public Retval updatePasswordByUser(HashMap<String, Object> query) {
+        Retval retval = Retval.newInstance();
+        int count = userMapper.updatePasswordByUser(query);
+        if(count<=0){
+            retval.fail("原密码输入不正确,请重新输入!");
+        }
+        return retval;
     }
 
 }

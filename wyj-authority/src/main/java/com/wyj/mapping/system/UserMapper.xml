@@ -42,6 +42,13 @@
 		userName=#{userName},password=#{password},name=#{name},sex=#{sex},phone=#{phone},email=#{email},address=#{address}
 		WHERE userId = #{userId}
 	</update>
+	
+	<update id="updatePasswordByUser">
+		UPDATE s_auth_user SET
+		password=#{newPassword}
+		WHERE userId = #{userId} AND password = #{oldPassword}
+	</update>
+	
 	<select id="list" parameterType="com.wyj.entity.system.User"
 		resultMap="userMap">
 		SELECT * FROM s_auth_user
