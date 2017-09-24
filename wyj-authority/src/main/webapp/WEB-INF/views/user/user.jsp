@@ -6,7 +6,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>huiju</title>
 <link href="${bathPath}/plugins/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/bootstrap-table-1.11.1/bootstrap-table.min.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.css" rel="stylesheet" />
@@ -22,9 +21,15 @@
 <body>
 	<div id="main">
 		<div id="toolbar">
-			<button type="button" class="btn btn-primary" data-toggle="modal" onclick='creat(model);'>新增用户</button>
-			<button type="button" class="btn btn-primary" data-toggle="modal" onclick="edit(model);">编辑用户</button>
-			<button type="button" class="btn btn-primary" onclick="remove(model);">删除用户</button>
+			<shiro:hasPermission name="user:save">
+				<button type="button" class="btn btn-primary" data-toggle="modal" onclick='creat(model);'>新增用户</button>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="user:edit">
+				<button type="button" class="btn btn-primary" data-toggle="modal" onclick="edit(model);">编辑用户</button>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="user:remove">
+				<button type="button" class="btn btn-primary" onclick="remove(model);">删除用户</button>
+			</shiro:hasPermission>
 		</div>
 		<table id="table"></table>
 	</div>
@@ -68,7 +73,6 @@
 							</div>
 							<label class="col-sm-1 control-label">性别:</label> <select id="sex" name="sex" class="col-sm-1 form-control select2">
 							</select>
-
 						</div>
 						<div class="form-group">
 							<label class="col-sm-1 control-label">地址:</label>
@@ -80,14 +84,11 @@
 							<select id="roles" name="roles" class="col-sm-3 form-control select2">
 							</select>
 							</div>
-
 						</div>
 						<div class="form-group"></div>
 						<input type="hidden" name="userId">
 					</form>
 				</div>
-
-
 				<div class="modal-footer" style="border: none; margin-left: 40%; padding-bottom: 20px;">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
 					<button type="button" class="btn btn-primary" onclick="save(model);">提交</button>
@@ -109,8 +110,8 @@
             id : "myModal",
             formId : "saveForm",
             entityId : "userId",
-            createTitle : "新增字典",
-            editTitle : "编辑字典",
+            createTitle : "新增用户",
+            editTitle : "编辑用户",
             editURL : "${ctx}/user",
             saveURL : "${ctx}/user/add",
             removeURL : "${ctx}/user/remove",

@@ -6,7 +6,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>huiju</title>
 <link href="${bathPath}/plugins/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/bootstrap-table-1.11.1/bootstrap-table.min.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.css" rel="stylesheet" />
@@ -26,7 +25,7 @@
 	</div>
 	<div class="col-sm-10">
 		<div id="toolbar">
-			<button type="button" class="btn btn-primary" data-toggle="modal" onclick='creat(model);'>新增数据字典</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal" onclick='creatBefore(model);'>新增数据字典</button>
 			<button type="button" class="btn btn-primary" data-toggle="modal" onclick="edit(model);">编辑数据字典</button>
 			<button type="button" class="btn btn-primary" onclick="remove(model);">删除数据字典</button>
 			<input id="search_dataGroupId" type="hidden">
@@ -109,27 +108,25 @@
             dataURL : '${ctx}/dataDict/getData?groupCode='
         }
         var dataStore = getDataStore(model.dataURL+'yesOrNo');
-        function setting(url) {
-            var setting = {
-                async : {
+        var setting = {
+            data : {
+                simpleData : {
                     enable : true,
-                    type : "get",
-                    //表示异步加载采用 post 方法请求
-                    url : url,
-                    autoParam : [ "id", "type" ]
-                //传递节点的id 和 type值给后台(当异步加载数据时)
+                    idKey : "id",
+                    pIdKey : "parentId",
+                    rootPId : 0
                 },
+    			key : {
+    			    url: "xUrl"
+    			}
+            },
+            callback : {
+                onClick : zTreeOnClick
+            }
+        };
 
-                callback : {
-                    //                         onAsyncSuccess: zTreeOnAsyncSuccess,
-                    onClick : zTreeOnClick
-                //单击节点事件
-                }
-            };
-
-            return setting;
-        }
-
+            var ztree;
+        
         function zTreeOnClick(event, treeId, treeNode, clickFlag) {
             $('#search_dataGroupId').val(treeNode.id);
             $('#demo-table').bootstrapTable('refresh'); //刷新表格
@@ -138,15 +135,26 @@
         function myCreate(model){
             $('#'+model.formId + " input[name='dataGroup.groupId']").val($('#search_dataGroupId').val());
         }
-        
+        function creatBefore(model) {
+         var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+         var treeNodes = treeObj.getSelectedNodes();
+         if (!!treeNodes[0] && treeNodes[0].isParent == true) {
+             creat(model);
+         } else {
+             alert('数据分组暂不支持级联!');
+             return false;
+         }
+     }        
         function myEdit(obj,model){
             $('#'+model.formId + " input[name='dataGroup.groupId']").val(obj.dataGroup.groupId);
         }
         
         $(function() {
             initTable();
-            var treeUrl = $("#treeDemo").attr("url");
-            $.fn.zTree.init($("#treeDemo"), setting(treeUrl));
+            //加载树
+            var jsonTree = getDataStore($("#treeDemo").attr("url"));
+            ztree = $.fn.zTree.init($("#treeDemo"), setting, jsonTree);
+            
             $("#status").select2({
                 placeholder : "--请选择--",
                 dropdownParent : $("#myModal"),
@@ -163,7 +171,6 @@
         function initTable() {
             var url = "${ctx}/dataDict/list";
             $('#demo-table').bootstrapTable({
-                //                 url : '${bathPath}/data/data1.json',
                 method : 'post',
                 contentType : 'application/x-www-form-urlencoded',
                 url : url,

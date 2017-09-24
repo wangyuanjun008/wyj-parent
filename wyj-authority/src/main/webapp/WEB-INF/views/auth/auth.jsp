@@ -6,7 +6,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>huiju</title>
 <link href="${bathPath}/plugins/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/bootstrap-table-1.11.1/bootstrap-table.min.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.css" rel="stylesheet" />
@@ -22,7 +21,7 @@
 </head>
 <body>
 	<div class="col-sm-2">
-		<ul id="treeDemo" class="ztree" url="${ctx}/menu/renderTree"></ul>
+		<ul id="treeDemo" class="ztree" url="${ctx}/auth/renderTree"></ul>
 	</div>
 	<div class="col-sm-10">
 		<div id="toolbar">
@@ -128,14 +127,14 @@
         var ztree;
 
         function creatBefore(model) {
-            var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
-            var treeNodes = treeObj.getSelectedNodes();
-            if (!!treeNodes[0] && treeNodes[0].isParent == false) {
+//             var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+//             var treeNodes = treeObj.getSelectedNodes();
+//             if (!!treeNodes[0] && treeNodes[0].isParent == false) {
                 creat(model);
-            } else {
-                alert('请选择需要授权的菜单');
-                return false;
-            }
+//             } else {
+//                 alert('请选择需要授权的菜单');
+//                 return false;
+//             }
         }
 
         function zTreeOnClick(event, treeId, treeNode, clickFlag) {
