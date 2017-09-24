@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wyj.entity.Retval;
 import com.wyj.entity.data.DataGroup;
 import com.wyj.service.data.DataGroupService;
-import com.wyj.utils.Retval;
 
 /**
  * 
@@ -54,6 +54,7 @@ public class DataGroupController {
         Retval retval = Retval.newInstance();
         try {
             if(dataGroup.getGroupId() == null){
+                dataGroup.setParentId(0L);
                 dataGroupService.save(dataGroup);
             }else{
                 dataGroupService.update(dataGroup);
@@ -75,10 +76,10 @@ public class DataGroupController {
 
     @ResponseBody
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public Retval remove(@RequestParam Long id) {
+    public Retval remove(@RequestParam Long[] ids) {
         Retval retval = Retval.newInstance();
         try {
-            dataGroupService.remove(id);
+            dataGroupService.batchRemoveDataGroup(ids);
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

@@ -93,4 +93,12 @@ public class AuthController {
         }
         return retval;
     }
+    
+    @ResponseBody
+    @RequestMapping(value = "/renderTree", method = RequestMethod.GET)
+    public List<Menu> renderTree() {
+        Menu menu = new Menu();
+//        menu.setType(1);
+        return menuService.list(menu);
+    }
 }

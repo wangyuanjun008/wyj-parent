@@ -25,9 +25,6 @@ import com.wyj.utils.ShiroUtils;
 public class LoginController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private MenuService menuService;
     
     @RequestMapping("/index")

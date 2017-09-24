@@ -1,5 +1,6 @@
 package com.wyj.controller.system;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import com.github.pagehelper.PageInfo;
 import com.wyj.entity.Retval;
 import com.wyj.entity.system.User;
 import com.wyj.service.system.UserService;
+import com.wyj.utils.ShiroUtils;
 
 /**
  * 
@@ -52,9 +54,9 @@ public class UserController {
     public Retval save(User user) {
         Retval retval = Retval.newInstance();
         try {
-            if(user.getUserId() == null){
+            if (user.getUserId() == null) {
                 userService.saveUser(user);
-            }else{
+            } else {
                 userService.updateUser(user);
             }
         } catch (Exception e) {
@@ -71,18 +73,30 @@ public class UserController {
         retval.put("obj", user);
         return retval;
     }
-    
+
     @ResponseBody
-    @RequestMapping(value="/remove",method=RequestMethod.POST)
-    public Retval remove(@RequestParam Long[] ids){
+    @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    public Retval remove(@RequestParam Long[] ids) {
         Retval retval = Retval.newInstance();
         try {
             userService.batchRemoveUser(ids);
-            
+
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             retval.fail(e.getMessage());
         }
         return retval;
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
+    public Retval updatePassword(String oldPassword, String newPassword) {
+        HashMap<String, Object> query = new HashMap<String, Object>();
+        query.put("userId", ShiroUtils.getUserId());
+        query.put("oldPassword", oldPassword);
+        query.put("newPassword", newPassword);
+        Retval retval = userService.updatePasswordByUser(query);
+        return retval;
+    }
+
 }

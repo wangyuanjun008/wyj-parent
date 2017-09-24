@@ -19,11 +19,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wyj.entity.Retval;
 import com.wyj.entity.data.DataDict;
 import com.wyj.entity.data.DataGroup;
+import com.wyj.entity.system.Menu;
 import com.wyj.service.data.DataDictService;
 import com.wyj.service.data.DataGroupService;
-import com.wyj.utils.Retval;
 
 /**
  * 
@@ -51,6 +52,9 @@ public class DataDictController {
     @ResponseBody
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public String query(@RequestParam(value = "offset", required = true, defaultValue = "1") Integer page, @RequestParam(value = "limit", required = false, defaultValue = "10") Integer pageSize,Long dataGroupId) {
+        if(dataGroupId == null){
+            return null;
+        }
         PageHelper.startPage(page, pageSize);
         DataDict dataDict = new DataDict();
         DataGroup dataGroup = new DataGroup();
@@ -88,10 +92,10 @@ public class DataDictController {
 
     @ResponseBody
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public Retval remove(@RequestParam Long id) {
+    public Retval remove(@RequestParam Long[] ids) {
         Retval retval = Retval.newInstance();
         try {
-            dataDictService.remove(id);
+            dataDictService.batchRemove(ids);
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -100,55 +104,40 @@ public class DataDictController {
         return retval;
     }
 
-    /**
-     * 加载数
-     * 
-     * @param id
-     * @param type
-     * @return
-     */
     @ResponseBody
     @RequestMapping(value = "/renderTree", method = RequestMethod.GET)
-    public List<Map<String, Object>> renderTree(Long id, String type) {
+    public List<Map<String, Object>> renderTree() {
         List<Map<String, Object>> returnList = new ArrayList<Map<String, Object>>();
-        // 加载根节点
-        if (StringUtils.isEmpty(id)) {
-            Map<String, Object> root = new HashMap<String, Object>();
-
-            root.put("id", 0);// 根节点的ID
-            root.put("name", "数字字典分组"); // 根节点的名字
-            root.put("isParent", true);//// 设置根节点为父节点
-
-            // 加载一级节点
-            List<Map<String, Object>> returnList1 = new ArrayList<Map<String, Object>>();
-            List<DataGroup> dataGroups = dataGroupService.list();
-            for (DataGroup dataGroup : dataGroups) {
-                Map<String, Object> node = new HashMap<String, Object>();
-                node.put("id", dataGroup.getGroupId());
-                node.put("name", dataGroup.getGroupName());
-                node.put("isParent", false);
-                returnList1.add(node);
-            }
-
-            root.put("children", returnList1);
-            returnList.add(root);
-
+        List<DataGroup> dataGroups = dataGroupService.list();
+        for (DataGroup dataGroup : dataGroups) {
+            Map<String, Object> node = new HashMap<String, Object>();
+              node.put("id", dataGroup.getGroupId());
+              node.put("name", dataGroup.getGroupName());
+              node.put("parentId", dataGroup.getParentId());
+              returnList.add(node);
         }
         return returnList;
     }
-
 
     /**
      * 显示数据字典下拉
      * @param groupCode
      * @return
      */
+//    @ResponseBody
+//    @RequestMapping(value = "/getData", method = RequestMethod.GET)
+//    public String getDataDictByGroupCode(@RequestParam String groupCode) {
+//
+//        List<Map<Long, String>> map = dataDictService.getDataDictByGroupCode(groupCode);
+//        return JSON.toJSONString(map);
+//    }
+
+    
     @ResponseBody
     @RequestMapping(value = "/getData", method = RequestMethod.GET)
-    public String getDataDictByGroupCode(@RequestParam String groupCode) {
+    public String getDictCodeNameByGroupCode(@RequestParam String groupCode) {
 
-        List<Map<Long, String>> map = dataDictService.getDataDictByGroupCode(groupCode);
+        List<Map<Long, String>> map = dataDictService.getDictCodeNameByGroupCode(groupCode);
         return JSON.toJSONString(map);
     }
-
 }
