@@ -106,6 +106,7 @@
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
 			<version>7.0</version>
+			<scope>provided</scope> 
 		</dependency>
 		<!-- JSTL标签类 -->
 		<dependency>
@@ -204,7 +205,7 @@
 			<version>${jackson.version}</version>
 		</dependency>
 		<!-- JSON end -->
-		
+
 		<!-- SECURITY begin -->
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
@@ -226,12 +227,12 @@
 			<artifactId>shiro-ehcache</artifactId>
 			<version>${shiro.version}</version>
 		</dependency>
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-cas</artifactId>
-            <version>${shiro.version}</version>
-        </dependency>
-		<!-- SECURITY end -->		
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-cas</artifactId>
+			<version>${shiro.version}</version>
+		</dependency>
+		<!-- SECURITY end -->
 	</dependencies>
 	<build>
 		<plugins>
@@ -242,6 +243,14 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<configuration>
+				<path>/</path>
+					<port>8080</port>
 				</configuration>
 			</plugin>
 		</plugins>
