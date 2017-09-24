@@ -102,15 +102,13 @@
 	
 	<select id="listMenuPermsByUserId" parameterType="long" resultType="string">
 		SELECT DISTINCT
-			m.perms
+			t3.perms
 		FROM
-			s_auth_user t1
-		LEFT JOIN s_auth_rolerelmenu t2 ON t1.role_id = t2.role_id
-		LEFT JOIN s_auth_menu t3 ON t2.menu_id = t3.menu_id
+			s_auth_userrelrole t1
+		LEFT JOIN s_auth_rolerelmenu t2 ON t1.roleId = t2.roleId
+		LEFT JOIN s_auth_menu t3 ON t2.menuId = t3.menuId
 		WHERE
 			t1.userId = #{value}
-		ORDER BY
-			m.orderNum ASC
 	</select>
 		
 	<select id="listAllMenuIdByUserId" resultType="long">

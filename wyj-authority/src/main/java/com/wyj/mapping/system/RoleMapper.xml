@@ -30,13 +30,13 @@
 	
 	<select id="listRoleSignByUserId" parameterType="long" resultType="string">
 		SELECT DISTINCT
-			r.roleSign 
+			t2.roleSign 
 		FROM
 			s_auth_userrelrole t1
 		LEFT JOIN s_auth_role t2 ON t1.roleId = t2.roleId
 		LEFT JOIN s_auth_user t3 ON t1.userId = t3.userId
 		WHERE
-			u.userId = #{value}
+			t3.userId = #{value}
 	</select>	
 	
 	<resultMap type="com.wyj.entity.system.Role" id="roleMap">
