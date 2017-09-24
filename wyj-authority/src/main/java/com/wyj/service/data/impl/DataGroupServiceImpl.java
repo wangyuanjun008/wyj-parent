@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.wyj.dao.BaseMapper;
 import com.wyj.dao.data.DataGroupMapper;
 import com.wyj.entity.data.DataGroup;
+import com.wyj.service.data.DataDictService;
 import com.wyj.service.data.DataGroupService;
 import com.wyj.service.impl.BaseServiceImpl;
 
@@ -21,10 +22,20 @@ public class DataGroupServiceImpl extends BaseServiceImpl<DataGroup, Long> imple
 
     @Autowired
     private DataGroupMapper dataGroupMapper;
+    
+    @Autowired
+    private DataDictService dataDictService;
 
     @Override
     public BaseMapper<DataGroup, Long> getMapper() {
         return dataGroupMapper;
+    }
+
+    @Override
+    public int batchRemoveDataGroup(Long[] ids) {
+        int count = dataGroupMapper.batchRemove(ids);
+        dataDictService.batchRemoveByDataGroupId(ids);
+        return count;
     }
 
 }
