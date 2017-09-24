@@ -16,8 +16,19 @@ public interface DataDictService extends BaseService<DataDict, Long>{
 
     /**
      * 数据字典下拉
+     * key=dictId value=dictName
      * @param groupCode
      * @return
      */
-    public List<Map<Long, String>> getDataDictByGroupCode(String groupCode);
+    List<Map<Long, String>> getDataDictByGroupCode(String groupCode);
+    
+    /**
+     * 数据字典下拉
+     * key=dictCode value=dictName
+     * @param groupCode
+     * @return
+     */
+    List<Map<Long, String>> getDictCodeNameByGroupCode(String groupCode);
+    
+    int batchRemoveByDataGroupId(Long[] ids);
 }

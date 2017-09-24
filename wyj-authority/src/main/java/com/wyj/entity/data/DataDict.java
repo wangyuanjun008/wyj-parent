@@ -19,8 +19,6 @@ public class DataDict extends BaseEntity {
 
     private String dictName;// 名称
 
-    // private String groupCode;// 分组编码
-
     private DataGroup dataGroup;
 
     private String remark;// 描述

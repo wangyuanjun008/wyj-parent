@@ -35,4 +35,14 @@ public class DataDictServiceImpl extends BaseServiceImpl<DataDict, Long> impleme
         return dataDictMapper.getDataDictByGroupCode(groupCode);
     }
 
+    @Override
+    public List<Map<Long, String>> getDictCodeNameByGroupCode(String groupCode) {
+        return dataDictMapper.getDictCodeNameByGroupCode(groupCode);
+    }
+
+    @Override
+    public int batchRemoveByDataGroupId(Long[] ids) {
+        return dataDictMapper.batchRemoveByDataGroupId(ids);
+    }
+
 }

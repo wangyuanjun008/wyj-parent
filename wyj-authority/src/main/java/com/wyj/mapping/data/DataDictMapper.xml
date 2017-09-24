@@ -19,12 +19,27 @@
 		b_bd_datadict WHERE
 		dictId=#{value}
 	</delete>
-
+	<delete id="batchRemove">
+		DELETE FROM
+		b_bd_datadict WHERE
+		dictId IN 
+		<foreach item="dictId" collection="array" open="(" separator="," close=")">
+			#{dictId}
+		</foreach>
+	</delete>
+	<delete id="batchRemoveByDataGroupId">
+		DELETE FROM
+		b_bd_datadict WHERE
+		dictId IN 
+		<foreach item="dataGroupId" collection="array" open="(" separator="," close=")">
+			#{dataGroupId}
+		</foreach>
+	</delete>
 	<update id="update" parameterType="com.wyj.entity.data.DataDict">
 		UPDATE b_bd_datadict
 		SET dictCode =
 		#{dictCode},dictName=#{dictName},dataGroupId=#{dataGroup.groupId},remark=#{remark},status=#{status},dictParentId=#{dictParentId}
-		WHERE dictId = #{value}
+		WHERE dictId = #{dictId}
 	</update>
 	<select id="list" resultMap="dataDictList"
 		parameterType="com.wyj.entity.data.DataDict">
@@ -39,6 +54,12 @@
 	<select id="getDataDictByGroupCode" resultType="map"
 		parameterType="java.lang.String">
 		SELECT t1.dictId as id,t1.dictName as text
+		FROM b_bd_datadict t1,b_bd_datagroup t2 WHERE t1.dataGroupId = t2.groupId AND t2.groupCode=#{groupCode}
+	</select>
+	
+	<select id="getDictCodeNameByGroupCode" resultType="map"
+		parameterType="java.lang.String">
+		SELECT t1.dictCode as id,t1.dictName as text
 		FROM b_bd_datadict t1,b_bd_datagroup t2 WHERE t1.dataGroupId = t2.groupId AND t2.groupCode=#{groupCode}
 	</select>
 

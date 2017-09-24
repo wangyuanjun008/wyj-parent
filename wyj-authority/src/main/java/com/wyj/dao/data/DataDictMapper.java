@@ -15,5 +15,19 @@ import com.wyj.entity.data.DataDict;
  */
 public interface DataDictMapper extends BaseMapper<DataDict, Long> {
 
+    /**
+     * key=dictId value=dictName
+     * @param groupCode
+     * @return
+     */
     List<Map<Long, String>> getDataDictByGroupCode(String groupCode);
+    
+    /**
+     * key=dictCode value=dictName
+     * @param groupCode
+     * @return
+     */
+    List<Map<Long, String>> getDictCodeNameByGroupCode(String groupCode);
+    
+    int batchRemoveByDataGroupId(Long[] ids);
 }
