@@ -9,11 +9,10 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
+			classpath:springmvc-servlet.xml
 			classpath:applicationContext.xml
-			<!-- classpath*:/applicationContext.xml -->
 			classpath:spring-mybatis.xml
 			classpath:spring-context-shiro.xml
-			classpath:springmvc-servlet.xml
 		</param-value>
 
 	</context-param>
