@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wyj.annotation.SysLog;
 import com.wyj.entity.Retval;
 import com.wyj.entity.system.User;
 import com.wyj.service.system.UserService;
@@ -49,6 +50,7 @@ public class UserController {
         return JSON.toJSONString(pageInfo.getList());
     }
 
+    @SysLog(action="新增/编辑用户")
     @ResponseBody
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Retval save(User user) {
@@ -74,6 +76,7 @@ public class UserController {
         return retval;
     }
 
+    @SysLog(action="删除用户")
     @ResponseBody
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     public Retval remove(@RequestParam Long[] ids) {
@@ -88,6 +91,7 @@ public class UserController {
         return retval;
     }
 
+    @SysLog(action="修改密码")
     @ResponseBody
     @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
     public Retval updatePassword(String oldPassword, String newPassword) {
