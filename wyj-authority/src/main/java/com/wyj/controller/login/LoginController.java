@@ -18,9 +18,14 @@ import org.springframework.web.servlet.ModelAndView;
 import com.wyj.entity.Retval;
 import com.wyj.entity.system.Menu;
 import com.wyj.service.system.MenuService;
-import com.wyj.service.system.UserService;
 import com.wyj.utils.ShiroUtils;
-
+/**
+ * 登录
+ * 
+ * 
+ * @author：WangYuanJun
+ * @date：2017年9月6日 下午11:15:45
+ */
 @Controller
 public class LoginController {
 
@@ -31,13 +36,12 @@ public class LoginController {
     public String index() {
         return "login";
     }
-
+    
     @RequestMapping("/public")
-    public ModelAndView index1() {
+    public ModelAndView main() {
         ModelAndView modelAndView=new ModelAndView("public");
         List<Menu> menus = menuService.listAllMenuIdByUserId(ShiroUtils.getUserId());
         modelAndView.addObject("menus",menus);
-        
         return modelAndView;
     }
     
@@ -67,4 +71,5 @@ public class LoginController {
         
         return retval;
     }
+
 }
