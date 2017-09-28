@@ -30,7 +30,7 @@
 		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
 	</context:component-scan>
 
-
+	<aop:aspectj-autoproxy proxy-target-class="true" />
 </beans>
             
             
