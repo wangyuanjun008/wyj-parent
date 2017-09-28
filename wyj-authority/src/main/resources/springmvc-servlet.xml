@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/mvc
             http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                    http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
             http://www.springframework.org/schema/context
             http://www.springframework.org/schema/context/spring-context.xsd"
 	default-lazy-init="true">
 	<!--springmvc的注解驱动，将controller映射成url -->
 	<!-- 1、配置映射器与适配器 -->
 	<mvc:annotation-driven />
-	
+
 	<!-- 加载包中的controller 注解扫描包 把标记了@Controller注解的类转换为bean -->
 	<!-- 3、自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
-<!-- 	<context:component-scan base-package="com.wyj.controller" -->
-<!-- 		use-default-filters="false"> -->
-<!-- 		<context:include-filter type="annotation" -->
-<!-- 			expression="org.springframework.stereotype.Controller" /> -->
-<!-- 		<context:include-filter type="annotation" -->
-<!-- 			expression="org.springframework.web.bind.annotation.ControllerAdvice" /> -->
-<!-- 	</context:component-scan> -->
+	<!-- <context:component-scan base-package="com.wyj" use-default-filters="false"> 
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" 
+		/> <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" 
+		/> </context:component-scan> -->
 
 	<mvc:annotation-driven
 		content-negotiation-manager="contentNegotiationManager">
@@ -65,4 +65,6 @@
 
 	<mvc:resources location="/resources/**" mapping="/resources/**" />
 
+	<!-- 启动aop注解 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
 </beans>
