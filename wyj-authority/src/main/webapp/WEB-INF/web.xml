@@ -51,7 +51,7 @@
 	    <filter-name>shiroFilter</filter-name>
 	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	    <init-param>
-	    	<!-- 该值缺省为false,表示生命周期由SpringApplicationContext管理,设置为true则表示由servlet container管理 -->
+	    	该值缺省为false,表示生命周期由SpringApplicationContext管理,设置为true则表示由servlet container管理
 	        <param-name>targetFilterLifecycle</param-name>
 	        <param-value>true</param-value>
 	    </init-param>
@@ -72,9 +72,6 @@
 	<listener>
 		<listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>
 	</listener>
-
-
-
 
 	<!-- ==================================================================servlet配置==================================================================== -->
 	<!-- class DispatcherServlet会自动扫描classpath下面的名字为<servlet-name>-servlet.xml的配置文件，在这里，因为我servlet-name配置 
