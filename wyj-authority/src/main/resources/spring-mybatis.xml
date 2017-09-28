@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="  
         http://www.springframework.org/schema/beans  
         http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
         http://www.springframework.org/schema/context  
-        http://www.springframework.org/schema/context/spring-context-4.0.xsd  
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd    
         http://www.springframework.org/schema/tx  
         http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
@@ -37,19 +40,26 @@
 		<!-- 获取连接最大等待时间 -->
 		<property name="maxWait" value="${maxWait}"></property>
 	</bean>
+	
 	<!-- ================================================配置sessionfactory============================================================================== -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
 		<!-- 自动扫描mapping.xml文件 -->
-		<property name="mapperLocations" value="classpath*:com/wyj/mapping/**/*.xml"></property>
+		<property name="mapperLocations">
+			<array>
+				<value>classpath*:com/wyj/mapping/**/*.xml</value>
+				<value>classpath*:com/wyj/mapping/*.xml</value>
+			</array>
+		</property>
 		<!-- 引入配置文件 -->
-<!-- 		<property name="configLocation" value="classpath:mybatis-config.xml" />  -->
+		<!-- <property name="configLocation" value="classpath:mybatis-config.xml" 
+			/> -->
 		<property name="plugins">
 			<array>
 				<bean class="com.github.pagehelper.PageInterceptor">
 					<property name="properties">
 						<value>
-						<!-- helperDialect：有别于3.0+版本，现在必须是helperDialect，否则spring启动加载时会报错 -->
+							<!-- helperDialect：有别于3.0+版本，现在必须是helperDialect，否则spring启动加载时会报错 -->
 							helperDialect=mysql
 						</value>
 					</property>
@@ -66,11 +76,43 @@
 	</bean>
 
 	<!-- =================================================声明式事务管理================================================================================== -->
-	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+
+	<!-- 对dataSource 数据源进行事务管理 -->
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
+	<!-- 实物切面配置(通知) -->
+	<tx:advice id="advice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 对save,update,remove 开头的方法进行事务管理,只要有异常就回滚 -->
+			<tx:method name="save*" propagation="REQUIRED"
+				rollback-for="java.lang.Throwable" />
+			<tx:method name="remove*" propagation="REQUIRED"
+				rollback-for="java.lang.Throwable" />
+			<tx:method name="update*" propagation="REQUIRED"
+				rollback-for="java.lang.Throwable" />
+			<tx:method name="batch*" propagation="REQUIRED"
+				rollback-for="java.lang.Throwable" />
+			<tx:method name="clear*" propagation="REQUIRED"
+				rollback-for="java.lang.Throwable" />
+			<!-- select,count开头的方法,开启只读,提高数据库访问性能 -->
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="list*" read-only="true" />
+			<tx:method name="count*" read-only="true" />
+			<!-- 对其他方法 使用默认的事务管理 -->
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
 
+	<!-- 事务 aop 配置 -->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.wyj.service.*.impl.*.*(..))"
+			id="pointCut" />
+		<aop:advisor advice-ref="advice" pointcut-ref="pointCut" />
+	</aop:config>
+
+	<!-- 启用对事务注解的支持(注解式) -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
 </beans>
