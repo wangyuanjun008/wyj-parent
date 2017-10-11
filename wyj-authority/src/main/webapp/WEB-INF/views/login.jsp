@@ -23,15 +23,24 @@
 			</div>
 		</div>
 		<div class="input-group m-b-20">
-			<span class="input-group-addon"><i class="zmdi zmdi-male"></i></span>
+			<span class="input-group-addon"><i class="zmdi zmdi-keyboard"></i></span>
 			<div class="fg-line">
 				<input id="password" type="password" class="form-control" name="password" placeholder="密码" required value="123456">
 			</div>
 		</div>
-		<div class="clearfix"></div>
-		<div class="checkbox">
-			<input id="rememberMe" type="checkbox" class="checkbix" data-text="自动登录" name="rememberMe">
-		</div>
+		<div class="input-group m-b-20">
+			<span class="input-group-addon"><i class="zmdi zmdi-alert-triangle"></i></span>
+			<div class="fg-line">
+				<input id="captcha" type="text" class="form-control" name="captcha" placeholder="验证码">
+			</div>
+		</div>		
+		<div class="input-group m-b-20">
+			<span class="input-group-addon"></span>
+			<div class="fg-line">
+				<img src="${ctx}/captcha" id="imgCaptcha">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" id="aCaptcha">点击刷新</a>
+			</div>
+		</div>		
 		<a id="login-bt" href="javascript:;" class="waves-effect waves-button waves-float"><i class="zmdi zmdi-arrow-forward"></i></a>
 	</div>
 	<script src="${bathPath}/plugins/jquery-3.2.1/jquery-3.2.1.min.js"></script>
@@ -40,7 +49,6 @@
 	<script src="${bathPath}/plugins/checkbix/js/checkbix.min.js"></script>
 	<script type="text/javascript">
         Checkbix.init();
-
         $(function() {
             // Waves初始化
             Waves.displayEffect();
@@ -50,9 +58,7 @@
             }).blur(function() {
                 $(this).parent().removeClass('fg-toggled');
             });
-        });
-        Checkbix.init();
-        $(function() {
+            
             // 点击登录按钮
             $('#login-bt').click(function() {
                 login();
@@ -63,7 +69,16 @@
                     login();
                 }
             });
+            
+            $('#imgCaptcha').click(function(){
+                $(this).attr('src','${ctx}/captcha?' + Math.floor(Math.random() * 100));
+            });
+            
+            $('#aCaptcha').click(function(){
+                $('#imgCaptcha').attr('src','${ctx}/captcha?' + Math.floor(Math.random() * 100));
+            });
         });
+        
         // 登录
         function login() {
             $.ajax({
@@ -71,8 +86,8 @@
                 type : 'POST',
                 data : {
                     userName : $('#userName').val(),
-                    password : $('#password').val()
-                //,
+                    password : $('#password').val(),
+                    captcha  : $('#captcha').val()
                 },
                 dataType : "json",
                 success : function(result) {
@@ -80,6 +95,7 @@
                     if (result.success == true) {
                         window.location.href = '${ctx}/public';
                     } else {
+                        alert(result.errorMsg);
                     }
                 },
                 error : function(error) {
