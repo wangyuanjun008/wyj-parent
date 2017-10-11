@@ -18,7 +18,26 @@
 }
 body{
     font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
-    font-size: 13px;
+    font-size: 11px;
     margin:0;
     padding:0;
+}
+.select-margin{
+	margin-left:15px;
+}
+
+.select2-container .select2-choice {  
+  height: 34px;  
+  line-height: 34px;  
+} 
+
+.has-error .form-control {
+    border-color: #ed5565;
+}
+.has-error .control-label {
+    color: #ed5565;
+}
+
+.select2-container--open {
+	z-index: 9999999
 }
