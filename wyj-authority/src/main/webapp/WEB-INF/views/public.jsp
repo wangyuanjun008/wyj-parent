@@ -113,41 +113,6 @@
 			<!-- /个人资料区 -->
 			<!-- 菜单区 -->
 			<ul class="main-menu"">
-<!-- 				<li><a class="waves-effect" href="javascript:Tab.addTab('首页', 'home');"><i class="zmdi zmdi-home"></i> 首页</a></li> -->
-<!-- 				<li class="sub-menu"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-accounts-list"></i> 系统组织管理</a> -->
-<!-- 					<ul> -->
-<%-- 						<li><a class="waves-effect" href="javascript:Tab.addTab('系统管理', '${ctx}/user/index');">系统管理</a></li> --%>
-<!-- 						<li><a href="crud.html" target="iframepage">仓库管理</a></li> -->
-<!-- 						<li><a class="waves-effect" href="javascript:Tab.addTab('组织管理', '/manage/organization/index');">组织管理</a></li> -->
-<!-- 					</ul></li> -->
-<!-- 				<li class="sub-menu"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-accounts"></i> 角色用户管理</a> -->
-<!-- 					<ul> -->
-<%-- 						<li><a class="waves-effect" href="javascript:Tab.addTab('角色管理', '${ctx}/role/index');">角色管理</a></li> --%>
-<%-- 						<li><a class="waves-effect" href="javascript:Tab.addTab('用户管理', '${ctx}/user/index');">用户管理</a></li> --%>
-<!-- 					</ul></li> -->
-<!-- 				<li class="sub-menu"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-lock-outline"></i> 权限资源管理</a> -->
-<!-- 					<ul> -->
-<%-- 						<li><a class="waves-effect" href="javascript:Tab.addTab('菜单管理', '${ctx}/menu/index');">菜单管理</a></li> --%>
-<%-- 						<li><a class="waves-effect" href="javascript:Tab.addTab('权限管理', '${ctx}/auth/index');">权限管理</a></li> --%>
-<!-- 					</ul></li> -->
-<!-- 				<li class="sub-menu"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-more"></i> 其他数据管理</a> -->
-<!-- 					<ul> -->
-<%-- 						<li><a class="waves-effect" href="javascript:Tab.addTab('数据分组', '${ctx}/dataGroup/index');">数据分组</a></li> --%>
-<%-- 						<li><a class="waves-effect" href="javascript:Tab.addTab('数据字典', '${ctx}/dataDict/index');">数据字典</a></li> --%>
-<!-- 						<li><a class="waves-effect" href="javascript:Tab.addTab('日志记录', '/manage/log/index');">日志记录</a></li> -->
-<!-- 						<li><a class="waves-effect" href="javascript:Tab.addTab('键值设置', '/manage/map/index');">键值设置</a></li> -->
-<!-- 					</ul></li> -->
-<!-- 				<li class="sub-menu" style="display: none;"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-menu"></i> 标签类目管理</a> -->
-<!-- 					<ul> -->
-<!-- 						<li><a class="waves-effect" href="javascript:Tab.addTab('标签管理', '/manage/tag/index');">标签管理</a></li> -->
-<!-- 						<li><a class="waves-effect" href="javascript:Tab.addTab('类目管理', '/manage/category/index');">类目管理</a></li> -->
-<!-- 					</ul></li> -->
-<!-- 				<li class="sub-menu" style="display: none;"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-collection-text"></i> 文章内容管理</a> -->
-<!-- 					<ul> -->
-<!-- 						<li><a class="waves-effect" href="javascript:Tab.addTab('文章管理', '/manage/article/index');">文章管理</a></li> -->
-<!-- 						<li><a class="waves-effect" href="javascript:Tab.addTab('回收管理', '/manage/article/recycle');">回收管理</a></li> -->
-<!-- 					</ul></li> -->
-<!-- 				<li> -->
 				<c:forEach items="${menus}" var="menu">
 					<li class="sub-menu"><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-collection-text"></i>${menu.name}</a>
 						<ul>
@@ -156,11 +121,10 @@
 									<c:forEach items="${menu.list}" var="subMenu">
 										<li><a class="waves-effect" href="javascript:Tab.addTab('${subMenu.name}', '${ctx}${subMenu.url }');">${subMenu.name}</a></li>
 									</c:forEach>
-								</c:when>							
+								</c:when>
 							</c:choose>
 
-						</ul>
-					</li>
+						</ul></li>
 				</c:forEach>
 				<li>
 					<div class="upms-version">&copy; WYJ_auth V1.0.0</div>
@@ -196,7 +160,7 @@
 					</ul>
 					<h3>&nbsp;&nbsp;&nbsp;获取帮助</h3>
 					<ul>
-						<li>git地址：<a href="https://www.baidu.com/" target="_blank">http://git</a></li>
+						<li>git地址：<a href="https://github.com/wangyuanjun008/wyj-parent.git" target="_blank">https://github.com/wangyuanjun008/wyj-parent.git</a></li>
 						<li>如需关注项目最新动态，请Watch、Star项目，同时也是对项目最好的支持</li>
 					</ul>
 				</div>
@@ -214,12 +178,6 @@
 				</div>
 				<div class="modal-body">
 					<form method="get" id="saveForm" class="form-horizontal">
-<!-- 						<div class="form-group"> -->
-<!-- 							<label class="col-sm-4 control-label"><span class="red">*</span>帐号:</label> -->
-<!-- 							<div class="col-sm-7"> -->
-<!-- 								<input type="text" class="form-control" name="roleName"> -->
-<!-- 							</div> -->
-<!-- 						</div> -->
 						<div class="form-group">
 							<label class="col-sm-4 control-label"><span class="red">*</span>原密码:</label>
 							<div class="col-sm-7">
