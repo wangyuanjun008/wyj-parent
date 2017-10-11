@@ -98,7 +98,6 @@
 	<script src="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.js"></script>
 	<script src="${bathPath}/plugins/select2-4.0.3/dist/js/select2.min.js"></script>
 	<script src="${bathPath}/plugins/select2-4.0.3/dist/js/i18n/zh-CN.js"></script>
-	<script src="${bathPath}/plugins/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
 	<script src="${bathPath}/plugins/jquery-validation/jquery.validate.min.js"></script>
 	<script src="${bathPath}/plugins/jquery-validation/messages_zh.min.js"></script>
 	<script src="${bathPath}/js/base.js"></script>
