@@ -1,62 +1,95 @@
-function save(model) {
-    $.confirm({
-        title : '提示！',
-        content : '确定保存吗?',
-        buttons : {
-            ok : {
-                text : "确定",
-                btnClass : 'btn-primary',
-                keys : [ 'enter' ],
-                action : function() {
-                    var data = $('#' + model.formId).serialize();
-//                    $.each($("select[multiple]"), function(i, select) {// 查找多选的下拉
-//                        var j = 0;
-//                        var reslist = $("#" + select.id).select2("data");// 得到下拉的值
-//                        $.each(reslist, function(j, res) {
-//                            data = data + '&' + select.id + 's[' + j + ']' + '.' + select.id + 'Id=' + res.id;
-//                        });
-//                    });
-
-                    $.ajax({
-                        type : 'post',
-                        url : model.saveURL,
-                        data : data,
-                        dataType : 'json',
-                        success : function(result) {
-                            if (result.success) {
-                                refresh(); // 刷新表格
-                                if (model.isTree == true) {
-                                    reloadTree();// 刷新树
-                                }
-                                $('#' + model.id).modal('hide');
-                            }
-
-                        },
-                        error : function(XMLHttpRequest, textStatus, errorThrown) {
-                            alert("请求异常");
-                        }
-                    });
-
-                }
-            },
-            cancel : {
-                text : "取消",
-                btnClass : 'btn-primary',
-                keys : [ 'esc' ],
-                action : function() {
-                }
+$(function() {
+ // 以下为修改jQuery Validation插件兼容Bootstrap的方法，没有直接写在插件中是为了便于插件升级
+    $.validator.setDefaults({
+        highlight : function(element) {
+            $(element).closest('div').removeClass('has-success').addClass('has-error');
+        },
+        success : function(element) {
+            element.closest('div').removeClass('has-error').addClass('has-success');
+        },
+        errorElement : "span",
+        errorClass : "help-block m-b-none",
+        validClass : "help-block m-b-none"
+    });
+    
+    // 注册jQuery即时校验
+    $("form").each(function() {
+        $(this).validate({
+            ignore : "",
+            onfocusout : function(element) {
+                $(element).valid();
 
             }
-        }
+        });
     });
+
+    $("select").change(function() {
+        $(this).valid();
+    });
+});
+
+function save(model) {
+    if ($("#" + model.formId).validate().form()) {
+        $.confirm({
+            title : '提示！',
+            content : '确定保存吗?',
+            buttons : {
+                ok : {
+                    text : "确定",
+                    btnClass : 'btn-primary',
+                    keys : [ 'enter' ],
+                    action : function() {
+                        var data = $('#' + model.formId).serialize();
+                        $.ajax({
+                            type : 'post',
+                            url : model.saveURL,
+                            data : data,
+                            dataType : 'json',
+                            success : function(result) {
+                                if (result.success) {
+                                    refresh(); // 刷新表格
+                                    if (model.isTree == true) {
+                                        reloadTree();// 刷新树
+                                    }
+                                    $('#' + model.id).modal('hide');
+                                }
+
+                            },
+                            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert("请求异常");
+                            }
+                        });
+
+                    }
+                },
+                cancel : {
+                    text : "取消",
+                    btnClass : 'btn-primary',
+                    keys : [ 'esc' ],
+                    action : function() {
+                    }
+
+                }
+            }
+        });
+    }
 }
 
 function creat(model) {
-    $(':input', '#' + model.formId).not(':button,:submit,:reset') // 将myform表单中input元素type为button、submit、reset、hidden排除
-    .val('') // 将input元素的value设为空值
-    .removeAttr('checked');
-    $('select').val(null).trigger('change');// 控件的值设置为null：清除Select2控件中的所有当前选择
+    // 将myform表单中input元素type为button、submit、reset、hidden排除,将input元素的value设为空值
+    $(':input', '#' + model.formId).not(':button,:submit,:reset').val('').removeAttr('checked');
+
+    // 控件的值设置为null：清除Select2控件中的所有当前选择
+    $('select').val(null).trigger('change');
+
+    // 清除校验内容
+    $("#" + model.formId).validate().resetForm();
+    // 清除错误样式
+    $("#" + model.formId + " div").removeClass("has-error");
+
     $('#' + model.id).modal('show');
+
+    // 页面自定义
     myCreate(model);
 }
 
@@ -68,9 +101,17 @@ function edit(model) {
     }
     var selectRowData = selectRow[0];
     var id = selectRowData[model.entityId];
-    $(':input', '#' + model.formId).not(':button,:submit,:reset') // 将myform表单中input元素type为button、submit、reset、hidden排除
-    .val('') // 将input元素的value设为空值
-    .removeAttr('checked')
+
+    // 将myform表单中input元素type为button、submit、reset、hidden排除,将input元素的value设为空值
+    $(':input', '#' + model.formId).not(':button,:submit,:reset').val('').removeAttr('checked');
+
+    // 控件的值设置为null：清除Select2控件中的所有当前选择
+    $('select').val(null).trigger('change');
+
+    // 清除校验内容
+    $("#" + model.formId).validate().resetForm();
+    // 清除错误样式
+    $("#" + model.formId + " div").removeClass("has-error");
 
     $('#' + model.id).modal('show');
     $.ajax({
@@ -80,8 +121,8 @@ function edit(model) {
         success : function(data) {
             var obj = data.data.obj;
             for ( var o in obj) {
-                if($('#'+o).is('select')){
-                    $("#"+o).val(obj[o]).trigger("change");
+                if ($('#' + o).is('select')) {
+                    $("#" + o).val(obj[o]).trigger("change");
                     continue;
                 }
                 var e = '#' + model.id + ' input[name=' + o + ']';
@@ -120,7 +161,7 @@ function remove(model) {
                         data : {
                             ids : ids
                         },
-                        traditional: true,
+                        traditional : true,
                         dataType : 'json',
                         success : function(result) {
                             if (result.success) {
@@ -148,23 +189,22 @@ function remove(model) {
 
 /** 重新加载树 */
 function reloadTree() {
-    //加载树
+    // 加载树
     var jsonTree = getDataStore($("#treeDemo").attr("url"));
     $.fn.zTree.destroy("treeDemo");
-    $.fn.zTree.init($("#treeDemo"), setting,jsonTree);
+    $.fn.zTree.init($("#treeDemo"), setting, jsonTree);
 }
 
-
-function getDataStore(url){
+function getDataStore(url) {
     var dataStore;
     $.ajax({
         dataType : 'json',
         type : 'get',
         url : url,
         async : false,
-        success: function(data){
-            dataStore=data;
+        success : function(data) {
+            dataStore = data;
         }
-     });
+    });
     return dataStore;
 }
