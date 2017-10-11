@@ -11,19 +11,20 @@
 <link href="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.css" rel="stylesheet" />
 <link href="${bathPath}/css/public.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/select2-4.0.3/dist/css/select2.min.css" rel="stylesheet" />
-
-<style>
-.select2-container--open {
-	z-index: 9999999
-}
-</style>
+<link href="${bathPath}/plugins/bootstrapvalidator/css/bootstrapValidator.min.css" rel="stylesheet" />
 </head>
 <body>
 	<div id="main">
 		<div id="toolbar">
-			<button type="button" class="btn btn-primary" data-toggle="modal" onclick='creat(model);'>新增分组</button>
-			<button type="button" class="btn btn-primary" data-toggle="modal" onclick="edit(model);">编辑分组</button>
-			<button type="button" class="btn btn-primary" onclick="remove(model);">删除分组</button>
+			<shiro:hasPermission name="dataGroup:save">
+				<button type="button" class="btn btn-primary" data-toggle="modal" onclick='creat(model);'>新增分组</button>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="dataGroup:edit">
+				<button type="button" class="btn btn-primary" data-toggle="modal" onclick="edit(model);">编辑分组</button>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="dataGroup:remove">
+				<button type="button" class="btn btn-primary" onclick="remove(model);">删除分组</button>
+			</shiro:hasPermission>
 		</div>
 		<table id="table"></table>
 	</div>
@@ -43,17 +44,17 @@
 						<div class="form-group">
 							<label class="col-sm-4 control-label"><span class="red">*</span>分组编码:</label>
 							<div class="col-sm-7">
-								<input type="text" class="form-control" name="groupCode">
+								<input type="text" class="form-control" name="groupCode" required="true">
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-4 control-label"><span class="red">*</span>分组名称:</label>
 							<div class="col-sm-7">
-								<input type="text" class="form-control" name="groupName">
+								<input type="text" class="form-control" name="groupName" required="true">
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-4 control-label"><span class="red">*</span>描述:</label>
+							<label class="col-sm-4 control-label">描述:</label>
 							<div class="col-sm-7">
 								<input type="text" class="form-control" name="remark">
 							</div>
@@ -62,8 +63,7 @@
 							<label class="col-sm-4 control-label">使用状态:</label> <select id="status" name="status" class="col-sm-1 form-control select2">
 							</select>
 						</div>
-						<input type="hidden" name="groupId">
-						<input type="hidden" name="parentId">
+						<input type="hidden" name="groupId"> <input type="hidden" name="parentId">
 					</form>
 				</div>
 				<div class="modal-footer" style="border: none; margin-left: 40%; padding-bottom: 20px;">
@@ -83,6 +83,8 @@
 	<script src="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.js"></script>
 	<script src="${bathPath}/plugins/select2-4.0.3/dist/js/select2.min.js"></script>
 	<script src="${bathPath}/plugins/select2-4.0.3/dist/js/i18n/zh-CN.js"></script>
+	<script src="${bathPath}/plugins/jquery-validation/jquery.validate.min.js"></script>
+	<script src="${bathPath}/plugins/jquery-validation/messages_zh.min.js"></script>
 	<script src="${bathPath}/js/base.js"></script>
 
 	<script type="text/javascript">
@@ -98,7 +100,7 @@
             dataURL : '${ctx}/dataDict/getData?groupCode='
         }
 
-        var dataStore = getDataStore(model.dataURL+'yesOrNo');
+        var dataStore = getDataStore(model.dataURL + 'yesOrNo');
         $(function() {
             initTable();
             $("#status").select2({
@@ -106,14 +108,14 @@
                 dropdownParent : $("#myModal"),
                 allowClear : true,
                 width : 150,
-                minimumResultsForSearch: -1,
+                minimumResultsForSearch : -1,
                 data : dataStore
             });
         });
-        function myCreate(){
-            
+        function myCreate() {
+
         }
-        
+
         function myEdit() {
             $("#status").val("16").trigger("change");
         }
@@ -137,8 +139,6 @@
                 minimumCountColumns : 2,
                 showPaginationSwitch : true,//是否显示 数据条数选择框
                 clickToSelect : true,//设置true 将在点击行时，自动选择rediobox 和 checkbox
-                detailView : true,//设置为 true 可以显示详细页面模式。
-                detailFormatter : 'detailFormatter',//格式化详细页面模式的视图。
                 pagination : true,// 分页 
                 paginationLoop : false,//设置为 true 启用分页条无限循环的功能
                 pageList : [ 5, 10, 20 ],
@@ -187,13 +187,6 @@
             });
 
         }
-        function detailFormatter(index, row) {
-            var html = [];
-            $.each(row, function(key, value) {
-                html.push('<p><b>' + key + ':</b> ' + value + '</p>');
-            });
-            return html.join('');
-        }
 
         /** 替换数据为文字 */
         function genderFormatter(value) {
@@ -208,31 +201,12 @@
 
         function queryParams(params) {
             var param = {
-                //                 orgCode : $("#orgCode").val(),
-                //                 userName : $("#userName").val(),
-                //                 startDate : $("#startDate").val(),
-                //                 endDate : $("#endDate").val(),
                 limit : this.limit, // 页面大小
                 offset : this.offset, // 页码
                 pageindex : this.pageNumber,
                 pageSize : this.pageSize
             }
             return param;
-        }
-
-        // 用于server 分页，表格数据量太大的话 不想一次查询所有数据，可以使用server分页查询，数据量小的话可以直接把sidePagination: "server"  改为 sidePagination: "client" ，同时去掉responseHandler: responseHandler就可以了，
-        function responseHandler(res) {
-            if (res) {
-                return {
-                    "rows" : res.result,
-                    "total" : res.totalCount
-                };
-            } else {
-                return {
-                    "rows" : [],
-                    "total" : 0
-                };
-            }
         }
 
         /** 刷新页面 */

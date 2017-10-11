@@ -11,12 +11,7 @@
 <link href="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.css" rel="stylesheet" />
 <link href="${bathPath}/css/public.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/select2-4.0.3/dist/css/select2.min.css" rel="stylesheet" />
-
-<style>
-.select2-container--open {
-	z-index: 9999999
-}
-</style>
+<link href="${bathPath}/plugins/bootstrapvalidator/css/bootstrapValidator.min.css" rel="stylesheet" />
 </head>
 <body>
 	<div id="main">
@@ -47,47 +42,47 @@
 					<h4 class="modal-title" id="myModalLabel">标题</h4>
 				</div>
 				<div class="modal-body">
-					<form method="get" id="saveForm">
-						<div class="form-group">
-							<label class="col-sm-1 control-label"><span class="red">*</span>昵称:</label>
-							<div class="col-sm-3">
-								<input type="text" class="form-control" name="userName">
+					<div class="col-lg-12">
+						<form method="get" id="saveForm" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-1 control-label"><span class="red">*</span>帐号:</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="userName" required="required">
+								</div>
+								<label class="col-sm-1 control-label"><span class="red">*</span>密码:</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="password" required="required">
+								</div>
+								<label class="col-sm-1 control-label"><span class="red">*</span>姓名:</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="name" required="required">
+								</div>
 							</div>
-							<label class="col-sm-1 control-label"><span class="red">*</span>密码:</label>
-							<div class="col-sm-3">
-								<input type="text" class="form-control" name="password">
+							<div class="form-group">
+								<label class="col-sm-1 control-label">手机号码:</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="phone">
+								</div>
+								<label class="col-sm-1 control-label">邮箱:</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="email">
+								</div>
+								<label class="col-sm-1 control-label select-margin">性别:</label> <select id="sex" name="sex" class="col-sm-1 form-control select2">
+								</select>
 							</div>
-							<label class="col-sm-1 control-label"><span class="red">*</span>姓名:</label>
-							<div class="col-sm-3">
-								<input type="text" class="form-control" name="name">
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-1 control-label">手机号码:</label>
-							<div class="col-sm-3">
-								<input type="text" class="form-control" name="phone">
-							</div>
-							<label class="col-sm-1 control-label">邮箱:</label>
-							<div class="col-sm-3">
-								<input type="text" class="form-control" name="email">
-							</div>
-							<label class="col-sm-1 control-label">性别:</label> <select id="sex" name="sex" class="col-sm-1 form-control select2">
-							</select>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-1 control-label">地址:</label>
-							<div class="col-sm-3">
-								<input type="text" class="form-control" name="address">
-							</div>
-							<div>
-							<label class="col-sm-1 control-label">可选角色:</label>
-							<select id="roles" name="roles" class="col-sm-3 form-control select2">
-							</select>
-							</div>
-						</div>
-						<div class="form-group"></div>
-						<input type="hidden" name="userId">
-					</form>
+							<div class="form-group">
+								<label class="col-sm-1 control-label">地址:</label>
+								<div class="col-sm-3">
+									<input type="text" class="form-control" name="address">
+								</div>
+								<div>
+									<label class="col-sm-1 control-label select-margin"><span class="red">*</span>可选角色:</label> <select id="roles" name="roles" class="col-sm-3 form-control select2" required="true">
+									</select>
+								</div>
+								<div class="form-group"></div>
+								<input type="hidden" name="userId">
+						</form>
+					</div>
 				</div>
 				<div class="modal-footer" style="border: none; margin-left: 40%; padding-bottom: 20px;">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -103,6 +98,9 @@
 	<script src="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.js"></script>
 	<script src="${bathPath}/plugins/select2-4.0.3/dist/js/select2.min.js"></script>
 	<script src="${bathPath}/plugins/select2-4.0.3/dist/js/i18n/zh-CN.js"></script>
+	<script src="${bathPath}/plugins/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+	<script src="${bathPath}/plugins/jquery-validation/jquery.validate.min.js"></script>
+	<script src="${bathPath}/plugins/jquery-validation/messages_zh.min.js"></script>
 	<script src="${bathPath}/js/base.js"></script>
 
 	<script type="text/javascript">
@@ -117,37 +115,36 @@
             removeURL : "${ctx}/user/remove",
             dataURL : '${ctx}/dataDict/getData?groupCode='
         }
-        var sexStore = getDataStore(model.dataURL+'sex');
+        var sexStore = getDataStore(model.dataURL + 'sex');
         var roleStore = getDataStore('${ctx}/role/getAllRoles');
-        function myCreate(model) {}
-        
-        function myEdit(obj,model){}
-        
+        function myCreate(model) {
+        }
+
+        function myEdit(obj, model) {
+        }
+
         $(function() {
             initTable();
             $("#sex").select2({
                 placeholder : "--请选择--",
                 dropdownParent : $("#myModal"),
                 allowClear : true,
-                width : 150,
-                minimumResultsForSearch: -1,
+                width : 188,
+                minimumResultsForSearch : -1,
                 data : sexStore
             });
             $("#roles").select2({
                 placeholder : "--请选择--",
                 dropdownParent : $("#myModal"),
                 allowClear : true,
-                multiple: true,
-                width : 180,
-                minimumResultsForSearch: -1,
+                multiple : true,
+                width : 188,
+                minimumResultsForSearch : -1,
                 data : roleStore,
-                multiple: true
+                multiple : true
             });
         });
 
-        function doQuery(params) {
-            $('#demo-table').bootstrapTable('refresh'); //刷新表格
-        }
         function initTable() {
             var url = "${ctx}/user/list";
             $('#demo-table').bootstrapTable({
@@ -165,8 +162,6 @@
                 minimumCountColumns : 2,
                 showPaginationSwitch : true,//是否显示 数据条数选择框
                 clickToSelect : true,//设置true 将在点击行时，自动选择rediobox 和 checkbox
-                detailView : true,//设置为 true 可以显示详细页面模式。
-                detailFormatter : 'detailFormatter',//格式化详细页面模式的视图。
                 pagination : true,// 分页 
                 paginationLoop : false,//设置为 true 启用分页条无限循环的功能
                 pageList : [ 5, 10, 20 ],
@@ -229,13 +224,6 @@
             });
 
         }
-        function detailFormatter(index, row) {
-            var html = [];
-            $.each(row, function(key, value) {
-                html.push('<p><b>' + key + ':</b> ' + value + '</p>');
-            });
-            return html.join('');
-        }
 
         function queryParams(params) {
             var param = {
@@ -245,21 +233,6 @@
                 pageSize : this.pageSize
             }
             return param;
-        }
-
-        // 用于server 分页，表格数据量太大的话 不想一次查询所有数据，可以使用server分页查询，数据量小的话可以直接把sidePagination: "server"  改为 sidePagination: "client" ，同时去掉responseHandler: responseHandler就可以了，
-        function responseHandler(res) {
-            if (res) {
-                return {
-                    "rows" : res.result,
-                    "total" : res.totalCount
-                };
-            } else {
-                return {
-                    "rows" : [],
-                    "total" : 0
-                };
-            }
         }
 
         /** 刷新页面 */

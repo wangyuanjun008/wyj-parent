@@ -12,20 +12,23 @@
 <link href="${bathPath}/css/public.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/select2-4.0.3/dist/css/select2.min.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/ztree.3.5.26/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
-
-<style>
-.select2-container--open {
-	z-index: 9999999
-}
-</style>
+<link href="${bathPath}/plugins/bootstrapvalidator/css/bootstrapValidator.min.css" rel="stylesheet" />
 </head>
 <body>
 	<div id="main">
 		<div id="toolbar">
-			<button type="button" class="btn btn-primary" data-toggle="modal" onclick='creat(model);'>新增角色</button>
-			<button type="button" class="btn btn-primary" data-toggle="modal" onclick="edit(model);">编辑角色</button>
-			<button type="button" class="btn btn-primary" onclick="remove(model);">删除角色</button>
-			<button type="button" class="btn btn-primary" data-toggle="modal" onclick="operate(model);">操作权限</button>
+			<shiro:hasPermission name="role:save">
+				<button type="button" class="btn btn-primary" data-toggle="modal" onclick='creat(model);'>新增角色</button>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="role:edit">
+				<button type="button" class="btn btn-primary" data-toggle="modal" onclick="edit(model);">编辑角色</button>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="role:remove">
+				<button type="button" class="btn btn-primary" onclick="remove(model);">删除角色</button>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="role:operation">
+				<button type="button" class="btn btn-primary" data-toggle="modal" onclick="operate(model);">操作权限</button>
+			</shiro:hasPermission>
 		</div>
 		<table id="table"></table>
 	</div>
@@ -47,17 +50,17 @@
 						<div class="form-group">
 							<label class="col-sm-4 control-label"><span class="red">*</span>角色名称:</label>
 							<div class="col-sm-7">
-								<input type="text" class="form-control" name="roleName">
+								<input type="text" class="form-control" name="roleName" required="true">
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-4 control-label"><span class="red">*</span>角色标识:</label>
 							<div class="col-sm-7">
-								<input type="text" class="form-control" name="roleSign">
+								<input type="text" class="form-control" name="roleSign" required="true">
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-4 control-label"><span class="red">*</span>描述:</label>
+							<label class="col-sm-4 control-label">描述:</label>
 							<div class="col-sm-7">
 								<input type="text" class="form-control" name="remake">
 							</div>
@@ -107,6 +110,8 @@
 	<script src="${bathPath}/plugins/ztree.3.5.26/js/jquery.ztree.excheck.min.js"></script>
 	<script src="${bathPath}/plugins/ztree.3.5.26/js/jquery.ztree.exedit.min.js"></script>
 	<script src="${bathPath}/plugins/ztree.3.5.26/js/jquery.ztree.exhide.min.js"></script>
+	<script src="${bathPath}/plugins/jquery-validation/jquery.validate.min.js"></script>
+	<script src="${bathPath}/plugins/jquery-validation/messages_zh.min.js"></script>
 	<script src="${bathPath}/js/base.js"></script>
 
 
@@ -126,12 +131,7 @@
             id : "myModal1",
             formId : "saveForm",
             entityId : "roleId",
-            authorizeURL : '${ctx}/role/authorize' 
-//             createTitle : "新增角色",
-//             editTitle : "编辑角色",
-//             editURL : "${ctx}/role",
-//             saveURL : "${ctx}/role/add",
-//             removeURL : "${ctx}/role/remove"
+            authorizeURL : '${ctx}/role/authorize'
         }
         var ztree;
 
@@ -166,9 +166,11 @@
             ztree = $.fn.zTree.init($("#treeDemo"), setting, jsonTree);
         });
 
-        function myCreate(model) {}
+        function myCreate(model) {
+        }
 
-        function myEdit(obj, model) {}
+        function myEdit(obj, model) {
+        }
 
         //点击分配权限
         function operate() {
@@ -195,17 +197,16 @@
             var selectRow = $("#demo-table").bootstrapTable('getSelections');
             var selectRowData = selectRow[0];
             var id = selectRowData[model.entityId];
-            
+
             var nodes = ztree.getCheckedNodes(true);
-            if(nodes.length == 0){
+            if (nodes.length == 0) {
                 return;
             }
             var menuList = new Array();
             for (var i = 0; i < nodes.length; i++) {
                 menuList.push(nodes[i].menuId);
             }
-            
-            
+
             $.confirm({
                 title : '提示！',
                 content : '确定保存吗?',
@@ -219,10 +220,10 @@
                                 type : 'post',
                                 url : model1.authorizeURL,
                                 data : {
-                					'menus' : menuList,
-                					'roleId' : id
+                                    'menus' : menuList,
+                                    'roleId' : id
                                 },
-                                traditional: true,
+                                traditional : true,
                                 dataType : 'json',
                                 success : function(result) {
                                 }
@@ -238,9 +239,7 @@
 
                     }
                 }
-            });            
-            
-
+            });
 
         }
         function doQuery(params) {
@@ -263,8 +262,6 @@
                 minimumCountColumns : 2,
                 showPaginationSwitch : true,//是否显示 数据条数选择框
                 clickToSelect : true,//设置true 将在点击行时，自动选择rediobox 和 checkbox
-                detailView : true,//设置为 true 可以显示详细页面模式。
-                detailFormatter : 'detailFormatter',//格式化详细页面模式的视图。
                 pagination : true,// 分页 
                 paginationLoop : false,//设置为 true 启用分页条无限循环的功能
                 pageList : [ 5, 10, 20 ],
@@ -302,13 +299,6 @@
             });
 
         }
-        function detailFormatter(index, row) {
-            var html = [];
-            $.each(row, function(key, value) {
-                html.push('<p><b>' + key + ':</b> ' + value + '</p>');
-            });
-            return html.join('');
-        }
 
         function queryParams(params) {
             var param = {
@@ -318,21 +308,6 @@
                 pageSize : this.pageSize
             }
             return param;
-        }
-
-        // 用于server 分页，表格数据量太大的话 不想一次查询所有数据，可以使用server分页查询，数据量小的话可以直接把sidePagination: "server"  改为 sidePagination: "client" ，同时去掉responseHandler: responseHandler就可以了，
-        function responseHandler(res) {
-            if (res) {
-                return {
-                    "rows" : res.result,
-                    "total" : res.totalCount
-                };
-            } else {
-                return {
-                    "rows" : [],
-                    "total" : 0
-                };
-            }
         }
 
         /** 刷新页面 */

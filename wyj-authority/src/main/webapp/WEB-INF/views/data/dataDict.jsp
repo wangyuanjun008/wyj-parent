@@ -12,12 +12,7 @@
 <link href="${bathPath}/css/public.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/select2-4.0.3/dist/css/select2.min.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/ztree.3.5.26/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
-
-<style>
-.select2-container--open {
-	z-index: 9999999
-}
-</style>
+<link href="${bathPath}/plugins/bootstrapvalidator/css/bootstrapValidator.min.css" rel="stylesheet" />
 </head>
 <body>
 	<div class="col-sm-2">
@@ -25,9 +20,15 @@
 	</div>
 	<div class="col-sm-10">
 		<div id="toolbar">
-			<button type="button" class="btn btn-primary" data-toggle="modal" onclick='creatBefore(model);'>新增数据字典</button>
-			<button type="button" class="btn btn-primary" data-toggle="modal" onclick="edit(model);">编辑数据字典</button>
-			<button type="button" class="btn btn-primary" onclick="remove(model);">删除数据字典</button>
+			<shiro:hasPermission name="dataDict:save">
+				<button type="button" class="btn btn-primary" data-toggle="modal" onclick='creatBefore(model);'>新增数据字典</button>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="dataDict:edit">
+				<button type="button" class="btn btn-primary" data-toggle="modal" onclick="edit(model);">编辑数据字典</button>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="dataDict:remove">
+				<button type="button" class="btn btn-primary" onclick="remove(model);">删除数据字典</button>
+			</shiro:hasPermission>
 			<input id="search_dataGroupId" type="hidden">
 		</div>
 		<div class="container" style="width: 100%">
@@ -48,11 +49,11 @@
 							<div class="form-group">
 								<label class="col-sm-1 control-label"><span class="red">*</span>编码:</label>
 								<div class="col-sm-3">
-									<input type="text" class="form-control" name="dictCode">
+									<input type="text" class="form-control" name="dictCode" required="true">
 								</div>
 								<label class="col-sm-1 control-label"><span class="red">*</span>名称:</label>
 								<div class="col-sm-3">
-									<input type="text" class="form-control" name="dictName">
+									<input type="text" class="form-control" name="dictName" required="true">
 								</div>
 								<label class="col-sm-1 control-label">描述:</label>
 								<div class="col-sm-3">
@@ -64,12 +65,10 @@
 								<div class="col-sm-3">
 									<input type="text" class="form-control" name="dictParentId">
 								</div>
-								<label class="col-sm-1 control-label">使用状态:</label>
-								<select id="status" name="status" class="col-sm-3 form-control select2">
+								<label class="col-sm-1 control-label">使用状态:</label> <select id="status" name="status" class="col-sm-3 form-control select2">
 								</select>
 							</div>
-							<input type="hidden" name="dictId">
-							<input type="hidden" name="dataGroup.groupId">
+							<input type="hidden" name="dictId"> <input type="hidden" name="dataGroup.groupId">
 						</form>
 					</div>
 				</div>
@@ -93,6 +92,8 @@
 	<script src="${bathPath}/plugins/ztree.3.5.26/js/jquery.ztree.excheck.min.js"></script>
 	<script src="${bathPath}/plugins/ztree.3.5.26/js/jquery.ztree.exedit.min.js"></script>
 	<script src="${bathPath}/plugins/ztree.3.5.26/js/jquery.ztree.exhide.min.js"></script>
+	<script src="${bathPath}/plugins/jquery-validation/jquery.validate.min.js"></script>
+	<script src="${bathPath}/plugins/jquery-validation/messages_zh.min.js"></script>
 	<script src="${bathPath}/js/base.js"></script>
 
 	<script type="text/javascript">
@@ -107,7 +108,7 @@
             removeURL : "${ctx}/dataDict/remove",
             dataURL : '${ctx}/dataDict/getData?groupCode='
         }
-        var dataStore = getDataStore(model.dataURL+'yesOrNo');
+        var dataStore = getDataStore(model.dataURL + 'yesOrNo');
         var setting = {
             data : {
                 simpleData : {
@@ -116,51 +117,51 @@
                     pIdKey : "parentId",
                     rootPId : 0
                 },
-    			key : {
-    			    url: "xUrl"
-    			}
+                key : {
+                    url : "xUrl"
+                }
             },
             callback : {
                 onClick : zTreeOnClick
             }
         };
 
-            var ztree;
-        
+        var ztree;
+
         function zTreeOnClick(event, treeId, treeNode, clickFlag) {
             $('#search_dataGroupId').val(treeNode.id);
             $('#demo-table').bootstrapTable('refresh'); //刷新表格
         }
 
-        function myCreate(model){
-            $('#'+model.formId + " input[name='dataGroup.groupId']").val($('#search_dataGroupId').val());
+        function myCreate(model) {
+            $('#' + model.formId + " input[name='dataGroup.groupId']").val($('#search_dataGroupId').val());
         }
         function creatBefore(model) {
-         var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
-         var treeNodes = treeObj.getSelectedNodes();
-         if (!!treeNodes[0] && treeNodes[0].isParent == true) {
-             creat(model);
-         } else {
-             alert('数据分组暂不支持级联!');
-             return false;
-         }
-     }        
-        function myEdit(obj,model){
-            $('#'+model.formId + " input[name='dataGroup.groupId']").val(obj.dataGroup.groupId);
+            var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+            var treeNodes = treeObj.getSelectedNodes();
+            if (!!treeNodes[0] && treeNodes[0].isParent == true) {
+                creat(model);
+            } else {
+                alert('数据分组暂不支持级联!');
+                return false;
+            }
         }
-        
+        function myEdit(obj, model) {
+            $('#' + model.formId + " input[name='dataGroup.groupId']").val(obj.dataGroup.groupId);
+        }
+
         $(function() {
             initTable();
             //加载树
             var jsonTree = getDataStore($("#treeDemo").attr("url"));
             ztree = $.fn.zTree.init($("#treeDemo"), setting, jsonTree);
-            
+
             $("#status").select2({
                 placeholder : "--请选择--",
                 dropdownParent : $("#myModal"),
                 allowClear : true,
                 width : 150,
-                minimumResultsForSearch: -1,
+                minimumResultsForSearch : -1,
                 data : dataStore
             });
         });
@@ -185,14 +186,10 @@
                 minimumCountColumns : 2,
                 showPaginationSwitch : true,//是否显示 数据条数选择框
                 clickToSelect : true,//设置true 将在点击行时，自动选择rediobox 和 checkbox
-                detailView : true,//设置为 true 可以显示详细页面模式。
-                detailFormatter : 'detailFormatter',//格式化详细页面模式的视图。
                 pagination : true,// 分页 
                 paginationLoop : false,//设置为 true 启用分页条无限循环的功能
                 pageList : [ 5, 10, 20 ],
                 classes : 'table table-hover table-no-bordered',
-                //sidePagination: 'server',
-                //silentSort: false,
                 smartDisplay : false,
                 idField : 'dictId',//指定主键列
                 sortName : 'dictId',
@@ -232,13 +229,6 @@
             });
 
         }
-        function detailFormatter(index, row) {
-            var html = [];
-            $.each(row, function(key, value) {
-                html.push('<p><b>' + key + ':</b> ' + value + '</p>');
-            });
-            return html.join('');
-        }
 
         /** 替换数据为文字 */
         function genderFormatter(value) {
@@ -250,7 +240,7 @@
                 return "否";
             }
         }
-        
+
         function queryParams(params) {
             var param = {
                 dataGroupId : $('#search_dataGroupId').val(),
@@ -260,21 +250,6 @@
                 pageSize : this.pageSize
             }
             return param;
-        }
-
-        // 用于server 分页，表格数据量太大的话 不想一次查询所有数据，可以使用server分页查询，数据量小的话可以直接把sidePagination: "server"  改为 sidePagination: "client" ，同时去掉responseHandler: responseHandler就可以了，
-        function responseHandler(res) {
-            if (res) {
-                return {
-                    "rows" : res.result,
-                    "total" : res.totalCount
-                };
-            } else {
-                return {
-                    "rows" : [],
-                    "total" : 0
-                };
-            }
         }
 
         /** 刷新页面 */
