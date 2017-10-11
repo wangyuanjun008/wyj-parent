@@ -13,6 +13,7 @@
 			classpath:applicationContext.xml
 			classpath:spring-mybatis.xml
 			classpath:spring-context-shiro.xml
+			classpath:spring-kaptcha.xml
 		</param-value>
 
 	</context-param>
