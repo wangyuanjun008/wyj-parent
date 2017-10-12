@@ -64,7 +64,7 @@
                 login();
             });
             // 回车事件
-            $('#userName, #password').keypress(function(event) {
+            $('#userName, #password,#captcha').keypress(function(event) {
                 if (13 == event.keyCode) {
                     login();
                 }
