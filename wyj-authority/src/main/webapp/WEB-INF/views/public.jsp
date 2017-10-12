@@ -59,21 +59,6 @@
 			</a> <span id="system_title">权限管理系统</span></li>
 			<li class="pull-right">
 				<ul class="hi-menu">
-					<!-- 搜索 -->
-					<li class="dropdown"><a class="waves-effect waves-light" data-toggle="dropdown" href="javascript:;"> <i class="him-icon zmdi zmdi-search"></i>
-					</a>
-						<ul class="dropdown-menu dm-icon pull-right">
-							<form id="search-form" class="form-inline">
-								<div class="input-group">
-									<input id="keywords" type="text" name="keywords" class="form-control" placeholder="搜索" />
-									<div class="input-group-btn">
-										<button type="submit" class="btn btn-default">
-											<span class="glyphicon glyphicon-search"></span>
-										</button>
-									</div>
-								</div>
-							</form>
-						</ul></li>
 					<li class="dropdown"><a class="waves-effect waves-light" data-toggle="dropdown" href="javascript:;"> <i class="him-icon zmdi zmdi-dropbox"></i>
 					</a>
 						<ul class="dropdown-menu dm-icon pull-right">
@@ -106,7 +91,7 @@
 						<img src="${bathPath}/images/user.jpg" />
 					</div>
 					<div class="sp-info">
-						小汪汪，您好！ <i class="zmdi zmdi-caret-down"></i>
+						${userName}，您好！ <i class="zmdi zmdi-caret-down"></i>
 					</div>
 				</a>
 			</div>
