@@ -63,6 +63,18 @@
 	    <url-pattern>/*</url-pattern>
 	</filter-mapping>
 
+	<!-- 装饰器 -->
+    <filter>
+        <filter-name>sitemeshFilter</filter-name>
+        <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
+        <async-supported>true</async-supported>
+    </filter>
+    <filter-mapping>
+        <filter-name>sitemeshFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
 	<!-- ==================================================================监听器配置==================================================================== -->
 	<!--3. 注册配置文件读取器，监听spring配置文件的变化 详见 注3 -->
 	<listener>
