@@ -178,7 +178,8 @@
                     field : 'sex',
                     title : '性别',
                     sortable : true,
-                    halign : 'center'
+                    halign : 'center',
+                    formatter : sexFormatter
                 }, {
                     field : 'age',
                     title : '年龄',
@@ -207,6 +208,17 @@
 
         }
 
+        /** 替换数据为文字 */
+        function sexFormatter(value) {
+            if (value == null || value == undefined) {
+                return "-";
+            } else if (value == 1) {
+                return "男";
+            } else if (value == 2) {
+                return "女";
+            }
+        }
+        
         function queryParams(params) {
             var param = {
                 limit : this.limit, // 页面大小

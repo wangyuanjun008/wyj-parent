@@ -207,7 +207,8 @@
                     field : 'isUse',
                     title : '是否使用',
                     sortable : true,
-                    halign : 'center'
+                    halign : 'center',
+                    formatter : isUseFormatter
                 }, {
                     field : 'orderNum',
                     title : '排序',
@@ -222,7 +223,7 @@
         }
 
         /** 替换数据为文字 */
-        function genderFormatter(value) {
+        function isUseFormatter(value) {
             if (value == null || value == undefined) {
                 return "-";
             } else if (value == 1) {
