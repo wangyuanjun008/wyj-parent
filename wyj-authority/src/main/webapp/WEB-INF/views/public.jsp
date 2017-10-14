@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>测试</title>
+<title>权限系统</title>
 <link href="${bathPath}/plugins/fullPage/jquery.fullPage.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/material-design-iconic-font-2.2.0/css/material-design-iconic-font.min.css" rel="stylesheet" />
@@ -14,36 +14,6 @@
 <link href="${bathPath}/plugins/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
 <link href="${bathPath}/css/admin.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.css" rel="stylesheet" />
-<style>
-/** skins **/
-#wyj_auth_server #header {
-	background: #3c8dbc;
-}
-
-#wyj_auth_server .content_tab {
-	background: #3c8dbc;
-}
-
-#wyj_auth_server .s-profile>a {
-	background: url(${bathPath}/images/wyj_upms.png) left top no-repeat;
-}
-
-#wyj_ucenter_home #header {
-	background: #6539B4;
-}
-
-#wyj_ucenter_home .content_tab {
-	background: #6539B4;
-}
-
-#wyj_ucenter_home .s-profile>a {
-	background: url(${bathPath}/images/wyj_ucenter.png) left top no-repeat;
-}
-
-.mCSB_containe {
-	background: #1e282c;
-}
-</style>
 </head>
 <body>
 	<header id="header">
@@ -55,7 +25,7 @@
 					<div class="line bottom"></div>
 				</div>
 			</li>
-			<li id="logo" class="hidden-xs"><a href="index.html"> < <%-- 			<img src="${bathPath}/images/logo.png" /> --%>
+			<li id="logo" class="hidden-xs"><a href="index.html">
 			</a> <span id="system_title">权限管理系统</span></li>
 			<li class="pull-right">
 				<ul class="hi-menu">
@@ -75,7 +45,7 @@
 							<li class="hidden-xs"><a class="waves-effect" data-ma-action="fullscreen" href="javascript:fullPage();"><i class="zmdi zmdi-fullscreen"></i> 全屏模式</a></li>
 							<li><a class="waves-effect" data-ma-action="clear-localstorage" href="javascript:;"><i class="zmdi zmdi-delete"></i> 清除缓存</a></li>
 							<li><a class="waves-effect" data-toggle="modal" onclick="personInfo();"><i class="zmdi zmdi-account"></i> 修改密码</a></li>
-							<li><a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-run"></i> 退出登录</a></li>
+							<li><a class="waves-effect" onclick="logout('${ctx}/logout','${ctx}/index');"><i class="zmdi zmdi-run"></i> 退出登录</a></li>
 						</ul></li>
 				</ul>
 			</li>

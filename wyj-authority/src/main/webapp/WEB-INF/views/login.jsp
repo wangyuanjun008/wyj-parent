@@ -12,6 +12,7 @@
 <link href="${bathPath}/plugins/material-design-iconic-font-2.2.0/css/material-design-iconic-font.min.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/waves-0.7.5/waves.min.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/checkbix/css/checkbix.min.css" rel="stylesheet" />
+<link href="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.css" rel="stylesheet" />
 <link href="${bathPath}/css/login.css" rel="stylesheet" />
 </head>
 <body>
@@ -44,6 +45,7 @@
 		<a id="login-bt" href="javascript:;" class="waves-effect waves-button waves-float"><i class="zmdi zmdi-arrow-forward"></i></a>
 	</div>
 	<script src="${bathPath}/plugins/jquery-3.2.1/jquery-3.2.1.min.js"></script>
+	<script src="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.js"></script>
 	<script src="${bathPath}/plugins/bootstrap-3.3.7/js/bootstrap.min.js"></script>
 	<script src="${bathPath}/plugins/waves-0.7.5/waves.min.js"></script>
 	<script src="${bathPath}/plugins/checkbix/js/checkbix.min.js"></script>
@@ -91,11 +93,20 @@
                 },
                 dataType : "json",
                 success : function(result) {
-                    console.log(result);
                     if (result.success == true) {
                         window.location.href = '${ctx}/public';
                     } else {
-                        alert(result.errorMsg);
+                        $.confirm({
+                            title : '系统提示',
+                            content : '验证码不正确',
+                            buttons : {
+                                ok : {
+                                    text : "确定",
+                                    btnClass : 'btn-primary',
+                                    keys : [ 'enter' ]
+                                }
+                            }
+                        });
                     }
                 },
                 error : function(error) {

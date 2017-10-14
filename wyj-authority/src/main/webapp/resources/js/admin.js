@@ -309,3 +309,35 @@ function updatePassword(url){
     });
     
 }
+
+function logout(logoutUrl,indexUrl){
+    $.confirm({
+        title : '系统提示',
+        content : '确定要退出本次登录吗?',
+        buttons : {
+            ok : {
+                text : "确定",
+                btnClass : 'btn-primary',
+                keys : [ 'enter' ],
+                action : function() {
+                    $.ajax({
+                        type : 'get',
+                        url : logoutUrl+ '?time=' + new Date().getTime(),
+                        dataType : 'json',
+                        success : function(result) {
+                            window.location.href = indexUrl;
+                        }
+                    });
+
+                }
+            },
+            cancel : {
+                text : "取消",
+                btnClass : 'btn-primary',
+                keys : [ 'esc' ],
+                action : function() {
+                }
+            }
+        }
+    });
+}

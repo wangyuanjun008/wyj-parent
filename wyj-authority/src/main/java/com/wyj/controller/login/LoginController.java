@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
+import com.wyj.annotation.SysLog;
 import com.wyj.entity.Retval;
 import com.wyj.entity.system.Menu;
 import com.wyj.service.system.MenuService;
@@ -104,6 +105,7 @@ public class LoginController {
         ModelAndView modelAndView = new ModelAndView("public");
         List<Menu> menus = menuService.listAllMenuIdByUserId(ShiroUtils.getUserId());
         modelAndView.addObject("menus", menus);
+        modelAndView.addObject("userName", ShiroUtils.getUserEntity().getName());
         return modelAndView;
     }
 
@@ -145,4 +147,15 @@ public class LoginController {
         return retval;
     }
 
+    /**
+     * 退出
+     */
+    @SysLog(action="退出登录")
+    @ResponseBody
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public Retval logout() {
+        ShiroUtils.logout();
+        return Retval.newInstance() ;
+    }
+    
 }
