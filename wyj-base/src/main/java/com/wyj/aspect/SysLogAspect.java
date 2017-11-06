@@ -65,7 +65,7 @@ public class SysLogAspect {
         sysLogEntity.setMethod(className+"."+methodName+"()");
         //请求的参数
         Object[] args = joinPoint.getArgs();
-        if(args[0] != null){
+        if(args != null && args.length !=0 && args[0] != null){
             sysLogEntity.setParams(args[0].toString());
         }
         sysLogEntity.setTime(time);
