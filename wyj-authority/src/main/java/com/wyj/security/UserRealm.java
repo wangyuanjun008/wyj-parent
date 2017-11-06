@@ -1,4 +1,4 @@
-package com.wyj.shiro.realm;
+package com.wyj.security;
 
 import java.util.Set;
 
