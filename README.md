@@ -30,3 +30,14 @@
 -  修改的方法用 update 做前缀
 ### 运行效果
 ![image](https://github.com/wangyuanjun008/wyj-parent/raw/master/images/login.png)
+![image](https://github.com/wangyuanjun008/wyj-parent/raw/master/images/homepage.png)
+![image](https://github.com/wangyuanjun008/wyj-parent/raw/master/images/user.png)
+![image](https://github.com/wangyuanjun008/wyj-parent/raw/master/images/user1.png)
+![image](https://github.com/wangyuanjun008/wyj-parent/raw/master/images/role.png)
+![image](https://github.com/wangyuanjun008/wyj-parent/raw/master/images/role1.png)
+![image](https://github.com/wangyuanjun008/wyj-parent/raw/master/images/role2.png)
+![image](https://github.com/wangyuanjun008/wyj-parent/raw/master/images/menu.png)
+![image](https://github.com/wangyuanjun008/wyj-parent/raw/master/images/auth.png)
+![image](https://github.com/wangyuanjun008/wyj-parent/raw/master/images/datagroup.png)
+![image](https://github.com/wangyuanjun008/wyj-parent/raw/master/images/datadict.png)
+![image](https://github.com/wangyuanjun008/wyj-parent/raw/master/images/log.png)
