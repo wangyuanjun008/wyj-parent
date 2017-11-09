@@ -11,6 +11,7 @@
 - 核心框架：Spring
 - WEB框架：SpringMVC
 - ORM框架：Mybatis
+- 缓存技术：reids
 - 安全框架：Shiro
 - 主页框架：Bootstrap
 - JS框架：jquery.js
