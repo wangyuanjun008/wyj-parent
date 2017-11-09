@@ -5,6 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +36,9 @@ public class DataGroupController {
     @Autowired
     private DataGroupService dataGroupService;
 
+    @Autowired
+    private RedisTemplate<String, DataGroup> redisTemplate;
+    
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     private String index() {
         return "/data/dataGroup";
@@ -59,6 +64,8 @@ public class DataGroupController {
             }else{
                 dataGroupService.update(dataGroup);
             }
+            ValueOperations<String, DataGroup> valueOperations = redisTemplate.opsForValue();
+            valueOperations.set("dataGroup"+dataGroup.getGroupId(), dataGroup);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -69,8 +76,13 @@ public class DataGroupController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Retval edit(@PathVariable String id) {
         Retval retval = Retval.newInstance();
-        DataGroup dataGroup = dataGroupService.getObjectById(Long.valueOf(id));
-        retval.put("obj", dataGroup);
+        if(redisTemplate.hasKey("dataGroup"+id)){
+            DataGroup dataGroup = redisTemplate.opsForValue().get("dataGroup"+id);
+            retval.put("obj", dataGroup);
+        }else{
+            DataGroup dataGroup = dataGroupService.getObjectById(Long.valueOf(id));
+            retval.put("obj", dataGroup);
+        }
         return retval;
     }
 
@@ -80,7 +92,9 @@ public class DataGroupController {
         Retval retval = Retval.newInstance();
         try {
             dataGroupService.batchRemoveDataGroup(ids);
-
+            for (Long long1 : ids) {
+                redisTemplate.delete("dataGroup"+long1.toString());
+            }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             retval.fail(e.getMessage());
