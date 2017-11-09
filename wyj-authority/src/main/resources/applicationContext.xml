@@ -16,7 +16,8 @@
 		<!-- <property name="location" value="classpath:jdbc.properties" /> -->
 		<property name="locations">
 			<list>
-				<value>classpath:jdbc.properties</value>
+<!-- 				<value>classpath:jdbc.properties</value> -->
+				<value>classpath:redis.properties</value>
 			</list>
 		</property>
 	</bean>
@@ -25,12 +26,60 @@
 
 	<!-- 自动去扫描base-pack下面或者子包下面的Java文件，如果扫描到有@Component @Controller@Service等这些注解的类，则把这些类注册为bean -->
 	<!-- 对包中的所有类进行扫描，以完成Bean创建和自动依赖注入的功能 -->
-	<context:component-scan base-package="com.wyj" use-default-filters="false">
-		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	<context:component-scan base-package="com.wyj"
+		use-default-filters="false">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
 	</context:component-scan>
 
 	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+
+	<!-- redis连接池的配置 -->
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxIdle" value="300" />
+		<property name="maxTotal" value="600" />
+		<property name="maxWaitMillis" value="1000" />
+		<property name="testOnBorrow" value="true" />
+	</bean>
+
+	<!-- 工厂类配置 -->
+	<bean id="connectionFactory"
+		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<property name="hostName" value="192.168.99.100"></property>
+		<property name="port" value="6379"></property>
+<!-- 		<property name="password" value="${redis.password}"></property> -->
+		<property name="poolConfig" ref="poolConfig"></property>
+	</bean>
+
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+		<property name="connectionFactory" ref="connectionFactory"></property>
+		<!-- 如果不配置Serializer，那么存储的时候智能使用String，如果用User类型存储，那么会提示错误User can't cast 
+			to String！！！ -->
+		<!-- 序列化方式 建议key/hashKey采用StringRedisSerializer。 -->
+		<property name="keySerializer">
+			<bean
+				class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+		</property>
+		<property name="hashKeySerializer">
+			<bean
+				class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+		</property>
+		<property name="valueSerializer">
+			<bean
+				class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+		</property>
+		<property name="hashValueSerializer">
+			<bean
+				class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+		</property>
+	</bean>
+
+	<!-- 对string操作的封装 -->
+	<bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
+		p:connection-factory-ref="connectionFactory" />
 </beans>
             
             
