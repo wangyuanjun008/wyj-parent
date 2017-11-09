@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +23,6 @@ import com.github.pagehelper.PageInfo;
 import com.wyj.entity.Retval;
 import com.wyj.entity.data.DataDict;
 import com.wyj.entity.data.DataGroup;
-import com.wyj.entity.system.Menu;
 import com.wyj.service.data.DataDictService;
 import com.wyj.service.data.DataGroupService;
 
@@ -46,8 +45,8 @@ public class DataDictController {
     private DataGroupService dataGroupService;
 
     @Autowired
-    private RedisTemplate<String, DataGroup> redisTemplate;
-    
+    private RedisTemplate<String, DataDict> redisTemplate;
+
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     private String index() {
         return "/data/dataDict";
@@ -55,8 +54,8 @@ public class DataDictController {
 
     @ResponseBody
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public String query(@RequestParam(value = "offset", required = true, defaultValue = "1") Integer page, @RequestParam(value = "limit", required = false, defaultValue = "10") Integer pageSize,Long dataGroupId) {
-        if(dataGroupId == null){
+    public String query(@RequestParam(value = "offset", required = true, defaultValue = "1") Integer page, @RequestParam(value = "limit", required = false, defaultValue = "10") Integer pageSize, Long dataGroupId) {
+        if (dataGroupId == null) {
             return null;
         }
         PageHelper.startPage(page, pageSize);
@@ -74,11 +73,13 @@ public class DataDictController {
     public Retval save(DataDict dataDict) {
         Retval retval = Retval.newInstance();
         try {
-            if(dataDict.getDictId() == null){
+            if (dataDict.getDictId() == null) {
                 dataDictService.save(dataDict);
-            }else{
+            } else {
                 dataDictService.update(dataDict);
             }
+            ValueOperations<String, DataDict> valueOperations = redisTemplate.opsForValue();
+            valueOperations.set("dataDict" + dataDict.getDictId(), dataDict);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -89,8 +90,13 @@ public class DataDictController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Retval edit(@PathVariable String id) {
         Retval retval = Retval.newInstance();
-        DataDict dataDict = dataDictService.getObjectById(Long.valueOf(id));
-        retval.put("obj", dataDict);
+        if (redisTemplate.hasKey("dataDict" + id)) {
+            DataDict dataDict = redisTemplate.opsForValue().get("dataGroup" + id);
+            retval.put("obj", dataDict);
+        } else {
+            DataDict dataDict = dataDictService.getObjectById(Long.valueOf(id));
+            retval.put("obj", dataDict);
+        }
         return retval;
     }
 
@@ -100,7 +106,10 @@ public class DataDictController {
         Retval retval = Retval.newInstance();
         try {
             dataDictService.batchRemove(ids);
-
+            dataGroupService.batchRemoveDataGroup(ids);
+            for (Long long1 : ids) {
+                redisTemplate.delete("dataDict" + long1.toString());
+            }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             retval.fail(e.getMessage());
@@ -108,6 +117,11 @@ public class DataDictController {
         return retval;
     }
 
+    /**
+     * ztree树
+     * 
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/renderTree", method = RequestMethod.GET)
     public List<Map<String, Object>> renderTree() {
@@ -115,28 +129,20 @@ public class DataDictController {
         List<DataGroup> dataGroups = dataGroupService.list();
         for (DataGroup dataGroup : dataGroups) {
             Map<String, Object> node = new HashMap<String, Object>();
-              node.put("id", dataGroup.getGroupId());
-              node.put("name", dataGroup.getGroupName());
-              node.put("parentId", dataGroup.getParentId());
-              returnList.add(node);
+            node.put("id", dataGroup.getGroupId());
+            node.put("name", dataGroup.getGroupName());
+            node.put("parentId", dataGroup.getParentId());
+            returnList.add(node);
         }
         return returnList;
     }
 
     /**
-     * 显示数据字典下拉
+     * 数据字典数据源
+     * 
      * @param groupCode
      * @return
      */
-//    @ResponseBody
-//    @RequestMapping(value = "/getData", method = RequestMethod.GET)
-//    public String getDataDictByGroupCode(@RequestParam String groupCode) {
-//
-//        List<Map<Long, String>> map = dataDictService.getDataDictByGroupCode(groupCode);
-//        return JSON.toJSONString(map);
-//    }
-
-    
     @ResponseBody
     @RequestMapping(value = "/getData", method = RequestMethod.GET)
     public String getDictCodeNameByGroupCode(@RequestParam String groupCode) {
