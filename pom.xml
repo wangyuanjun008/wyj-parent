@@ -21,6 +21,10 @@
 		<jedis.version>2.5.1</jedis.version>
 		<!-- mybatis版本号 -->
 		<mybatis.version>3.2.6</mybatis.version>
+		<!-- jedis -->
+		<jedis.version>2.5.1</jedis.version>
+		<!-- spring-data-redis -->
+		<spring-data-redis.version>1.5.0.RELEASE</spring-data-redis.version>
 		<junit.version>4.11</junit.version>
 		<velocity.version>1.7</velocity.version>
 		<spring-data-redis.version>1.5.0.RELEASE</spring-data-redis.version>
@@ -168,7 +172,7 @@
 			<artifactId>jedis</artifactId>
 			<version>${jedis.version}</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
