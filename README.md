@@ -29,3 +29,4 @@
 -  删除的方法用 remove(推荐) 或 delete 做前缀
 -  修改的方法用 update 做前缀
 ### 运行效果
+![image](https://github.com/wangyuanjun008/wyj-parent/raw/master/images/login.png)
