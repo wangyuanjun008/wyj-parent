@@ -1,12 +1,11 @@
 package com.wyj.constant;
 
 /**
- * 系统级静态变量
- *
- * @author ZhouChenglin
- * @email yczclcn@163.com
- * @url www.chenlintech.com
- * @date 2017年8月8日 下午1:35:38
+ * 静态变量
+ * 
+ * 
+ * @author：WangYuanJun
+ * @date：2017年9月19日 上午11:21:04
  */
 public class SystemConstant {
 	
