@@ -91,7 +91,7 @@ public class DataDictController {
     public Retval edit(@PathVariable String id) {
         Retval retval = Retval.newInstance();
         if (redisTemplate.hasKey("dataDict" + id)) {
-            DataDict dataDict = redisTemplate.opsForValue().get("dataGroup" + id);
+            DataDict dataDict = redisTemplate.opsForValue().get("dataDict" + id);
             retval.put("obj", dataDict);
         } else {
             DataDict dataDict = dataDictService.getObjectById(Long.valueOf(id));
