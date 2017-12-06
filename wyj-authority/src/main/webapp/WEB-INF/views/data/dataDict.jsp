@@ -115,10 +115,10 @@
         function creatBefore(model) {
             var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
             var treeNodes = treeObj.getSelectedNodes();
-            if (!!treeNodes[0] && treeNodes[0].isParent == true) {
+            if (!!treeNodes[0]) {
                 creat(model);
             } else {
-                alert('数据分组暂不支持级联!');
+                alert('请选择数据分组!');
                 return false;
             }
         }
