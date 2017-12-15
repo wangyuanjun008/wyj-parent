@@ -32,7 +32,5 @@
 
 <body>
 	<sitemesh:body></sitemesh:body>
-
-	<script src="${bathPath}/js/base.js"></script>
 </body>
 </html>
