@@ -10,7 +10,7 @@
 
 <link href="${bathPath}/plugins/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" />
 <link href="${bathPath}/plugins/jquery-confirm/jquery-confirm.min.css" rel="stylesheet" />
-<link href="${bathPath}/css/login2.css" rel="stylesheet" />
+<link href="${bathPath}/css/login.css" rel="stylesheet" />
 </head>
 <body>
 	<main class="auth-main">
